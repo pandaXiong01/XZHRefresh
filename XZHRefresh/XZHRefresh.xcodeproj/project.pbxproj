@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AA03294C1CFE83410051053B /* arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AA0329441CFE83410051053B /* arrow@2x.png */; };
+		AA03294D1CFE83410051053B /* XZHRefreshBaseView.m in Sources */ = {isa = PBXBuildFile; fileRef = AA0329471CFE83410051053B /* XZHRefreshBaseView.m */; };
+		AA03294E1CFE83410051053B /* XZHRefreshFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = AA0329491CFE83410051053B /* XZHRefreshFooterView.m */; };
+		AA03294F1CFE83410051053B /* XZHRefreshHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = AA03294B1CFE83410051053B /* XZHRefreshHeaderView.m */; };
+		AA0329521CFE83670051053B /* XZHViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA0329511CFE83670051053B /* XZHViewController.m */; };
 		FEBCA0D81CFDCF45003BDFDD /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBCA0D71CFDCF45003BDFDD /* main.m */; };
 		FEBCA0DB1CFDCF45003BDFDD /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBCA0DA1CFDCF45003BDFDD /* AppDelegate.m */; };
 		FEBCA0DE1CFDCF45003BDFDD /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBCA0DD1CFDCF45003BDFDD /* ViewController.m */; };
@@ -16,6 +21,17 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		AA0329441CFE83410051053B /* arrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "arrow@2x.png"; sourceTree = "<group>"; };
+		AA0329451CFE83410051053B /* RefreshConst.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RefreshConst.h; sourceTree = "<group>"; };
+		AA0329461CFE83410051053B /* XZHRefreshBaseView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XZHRefreshBaseView.h; sourceTree = "<group>"; };
+		AA0329471CFE83410051053B /* XZHRefreshBaseView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XZHRefreshBaseView.m; sourceTree = "<group>"; };
+		AA0329481CFE83410051053B /* XZHRefreshFooterView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XZHRefreshFooterView.h; sourceTree = "<group>"; };
+		AA0329491CFE83410051053B /* XZHRefreshFooterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XZHRefreshFooterView.m; sourceTree = "<group>"; };
+		AA03294A1CFE83410051053B /* XZHRefreshHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XZHRefreshHeaderView.h; sourceTree = "<group>"; };
+		AA03294B1CFE83410051053B /* XZHRefreshHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XZHRefreshHeaderView.m; sourceTree = "<group>"; };
+		AA0329501CFE83670051053B /* XZHViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XZHViewController.h; sourceTree = "<group>"; };
+		AA0329511CFE83670051053B /* XZHViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XZHViewController.m; sourceTree = "<group>"; };
+		AA0329531CFE8E5F0051053B /* XZHRefresh.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XZHRefresh.h; sourceTree = "<group>"; };
 		FEBCA0D31CFDCF45003BDFDD /* XZHRefresh.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = XZHRefresh.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FEBCA0D71CFDCF45003BDFDD /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		FEBCA0D91CFDCF45003BDFDD /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -39,6 +55,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		AA0329431CFE83410051053B /* XZHRefresh */ = {
+			isa = PBXGroup;
+			children = (
+				AA0329441CFE83410051053B /* arrow@2x.png */,
+				AA0329451CFE83410051053B /* RefreshConst.h */,
+				AA0329531CFE8E5F0051053B /* XZHRefresh.h */,
+				AA0329461CFE83410051053B /* XZHRefreshBaseView.h */,
+				AA0329471CFE83410051053B /* XZHRefreshBaseView.m */,
+				AA0329481CFE83410051053B /* XZHRefreshFooterView.h */,
+				AA0329491CFE83410051053B /* XZHRefreshFooterView.m */,
+				AA03294A1CFE83410051053B /* XZHRefreshHeaderView.h */,
+				AA03294B1CFE83410051053B /* XZHRefreshHeaderView.m */,
+			);
+			path = XZHRefresh;
+			sourceTree = "<group>";
+		};
 		FEBCA0CA1CFDCF45003BDFDD = {
 			isa = PBXGroup;
 			children = (
@@ -62,7 +94,10 @@
 				FEBCA0DA1CFDCF45003BDFDD /* AppDelegate.m */,
 				FEBCA0DC1CFDCF45003BDFDD /* ViewController.h */,
 				FEBCA0DD1CFDCF45003BDFDD /* ViewController.m */,
+				AA0329501CFE83670051053B /* XZHViewController.h */,
+				AA0329511CFE83670051053B /* XZHViewController.m */,
 				FEBCA0DF1CFDCF45003BDFDD /* Main.storyboard */,
+				AA0329431CFE83410051053B /* XZHRefresh */,
 				FEBCA0E21CFDCF45003BDFDD /* Assets.xcassets */,
 				FEBCA0E41CFDCF45003BDFDD /* LaunchScreen.storyboard */,
 				FEBCA0E71CFDCF45003BDFDD /* Info.plist */,
@@ -136,6 +171,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AA03294C1CFE83410051053B /* arrow@2x.png in Resources */,
 				FEBCA0E61CFDCF45003BDFDD /* LaunchScreen.storyboard in Resources */,
 				FEBCA0E31CFDCF45003BDFDD /* Assets.xcassets in Resources */,
 				FEBCA0E11CFDCF45003BDFDD /* Main.storyboard in Resources */,
@@ -149,8 +185,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AA03294F1CFE83410051053B /* XZHRefreshHeaderView.m in Sources */,
+				AA0329521CFE83670051053B /* XZHViewController.m in Sources */,
 				FEBCA0DE1CFDCF45003BDFDD /* ViewController.m in Sources */,
 				FEBCA0DB1CFDCF45003BDFDD /* AppDelegate.m in Sources */,
+				AA03294D1CFE83410051053B /* XZHRefreshBaseView.m in Sources */,
+				AA03294E1CFE83410051053B /* XZHRefreshFooterView.m in Sources */,
 				FEBCA0D81CFDCF45003BDFDD /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -300,6 +340,7 @@
 				FEBCA0EC1CFDCF45003BDFDD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
