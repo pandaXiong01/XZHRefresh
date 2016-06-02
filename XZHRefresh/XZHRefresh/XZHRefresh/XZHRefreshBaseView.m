@@ -8,6 +8,7 @@
 
 #import "XZHRefreshBaseView.h"
 #import "RefreshConst.h"
+
 @interface XZHRefreshBaseView ()
 @property (nonatomic, strong) UILabel *lastUpdateTimeLabel;
 @property (nonatomic, strong) UILabel *statusLabel;
@@ -15,6 +16,12 @@
 @property (nonatomic, strong) UIActivityIndicatorView *activityView;;
 @property (nonatomic) UIEdgeInsets scrollViewInitInset;
 @property (nonatomic) BOOL hasInitInset;
+
+/**
+ 交给子类去实现
+ */
+// 合理的Y值
+- (CGFloat)validY;
 
 @end
 
@@ -119,23 +126,23 @@
     [_scrollView addSubview:self];
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context {
-    if (![keyPath isEqualToString:XZHRefreshContentOffset]) {
-        return;
-    }
-    if (!self.userInteractionEnabled || self.alpha <= 0.01 || self.hidden || _state == XZHRefreshStateRefreshing) {
-        return;
-    }
-    // scrollView所滚动的Y值 * 控件的类型（头部控件是-1，尾部控件是1）
-//    CGFloat offsetY = _scrollView.contentOffset.y * self.viewType;
-//    CGFloat validY = self.validY;
-//    if (offsetY <= validY) return;
-    
-}
+
 #pragma mark 设置状态
 - (void)setState:(XZHRefreshState)state
 {
     
+}
+
+- (void)beginRefresh {
+
+
+}
+- (void)endRefresh {
+
+}
+//结束时释放资源
+- (void)free {
+
 }
 /*
 // Only override drawRect: if you perform custom drawing.

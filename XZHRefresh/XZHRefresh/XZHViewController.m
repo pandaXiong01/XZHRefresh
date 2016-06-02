@@ -15,8 +15,8 @@ NSString *const TableViewCellIdentifier = @"cell";
 @interface XZHViewController ()<UITableViewDataSource, UITableViewDelegate>
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) NSMutableArray *dataSource;
-@property (nonatomic, strong) XZHRefreshHeaderView *header;
-@property (nonatomic, strong) XZHRefreshFooterView *footer;
+//@property (nonatomic, strong) XZHRefreshHeaderView *header;
+//@property (nonatomic, strong) XZHRefreshFooterView *footer;
 @end
 
 @implementation XZHViewController

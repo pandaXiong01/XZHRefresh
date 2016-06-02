@@ -45,7 +45,9 @@ typedef void (^RefreshStateChangeBlock)(XZHRefreshBaseView *refreshView, XZHRefr
 @end
 
 
+
 @interface XZHRefreshBaseView : UIView
+
 @property (nonatomic, weak) UIScrollView *scrollView;
 /**
  *  block回调
