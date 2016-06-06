@@ -9,5 +9,5 @@
 #import "XZHRefreshBaseView.h"
 
 @interface XZHRefreshFooterView : XZHRefreshBaseView
-
++ (id)footer;
 @end
