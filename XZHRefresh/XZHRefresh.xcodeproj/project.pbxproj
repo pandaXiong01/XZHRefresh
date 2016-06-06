@@ -31,6 +31,7 @@
 		AA0EDB8D1D01269C004EEA34 /* XZHRefreshHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XZHRefreshHeaderView.m; sourceTree = "<group>"; };
 		AA0EDB931D012E77004EEA34 /* XZHRefreshConst.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XZHRefreshConst.h; sourceTree = "<group>"; };
 		AA0EDB941D012E77004EEA34 /* XZHRefreshConst.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XZHRefreshConst.m; sourceTree = "<group>"; };
+		AA0EDB961D018643004EEA34 /* XZHRefresh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XZHRefresh.h; sourceTree = "<group>"; };
 		FEBCA0F61D00634A003BDFDD /* XZHRefresh.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = XZHRefresh.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FEBCA0FA1D00634A003BDFDD /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		FEBCA0FC1D00634A003BDFDD /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -65,6 +66,7 @@
 				AA0EDB8D1D01269C004EEA34 /* XZHRefreshHeaderView.m */,
 				AA0EDB931D012E77004EEA34 /* XZHRefreshConst.h */,
 				AA0EDB941D012E77004EEA34 /* XZHRefreshConst.m */,
+				AA0EDB961D018643004EEA34 /* XZHRefresh.h */,
 			);
 			path = XZHRefresh;
 			sourceTree = "<group>";

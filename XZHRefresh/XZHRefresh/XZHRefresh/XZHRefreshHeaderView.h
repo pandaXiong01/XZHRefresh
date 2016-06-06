@@ -9,5 +9,5 @@
 #import "XZHRefreshBaseView.h"
 
 @interface XZHRefreshHeaderView : XZHRefreshBaseView
-
++ (instancetype)header;
 @end
