@@ -8,21 +8,118 @@
 
 #import "XZHRefreshHeaderView.h"
 #import "XZHRefreshConst.h"
+#import "UIView+Extension.h"
 
 @interface XZHRefreshHeaderView ()
-// 最后的更新时间
-@property (nonatomic, strong) NSDate *lastUpdateTime;
+/** 显示上次刷新时间的标签 */
+@property (weak, nonatomic) UILabel *updatedTimeLabel;
+/** 上次刷新时间 */
+@property (strong, nonatomic) NSDate *updatedTime;
+/** 显示状态文字的标签 */
+@property (weak, nonatomic) UILabel *stateLabel;
+/** 所有状态对应的文字 */
+@property (strong, nonatomic) NSMutableDictionary *stateTitles;
 
 @end
 
 
 @implementation XZHRefreshHeaderView
-
-+ (instancetype)header
+#pragma mark - 懒加载
+- (NSMutableDictionary *)stateTitles
 {
+    if (!_stateTitles) {
+        self.stateTitles = [NSMutableDictionary dictionary];
+    }
+    return _stateTitles;
+}
+
+- (UILabel *)stateLabel
+{
+    if (!_stateLabel) {
+        UILabel *stateLabel = [[UILabel alloc] init];
+        stateLabel.backgroundColor = [UIColor clearColor];
+        stateLabel.textAlignment = NSTextAlignmentCenter;
+        [self addSubview:_stateLabel = stateLabel];
+    }
+    return _stateLabel;
+}
+
+- (UILabel *)updatedTimeLabel
+{
+    if (!_updatedTimeLabel) {
+        // 1.创建控件
+        UILabel *updatedTimeLabel = [[UILabel alloc] init];
+        updatedTimeLabel.backgroundColor = [UIColor clearColor];
+        updatedTimeLabel.textAlignment = NSTextAlignmentCenter;
+        [self addSubview:_updatedTimeLabel = updatedTimeLabel];
+        
+        // 2.设置更新时间
+        self.updatedTime = [[NSUserDefaults standardUserDefaults] objectForKey:self.dateKey];
+    }
+    return _updatedTimeLabel;
+}
+
+#pragma mark - 初始化方法
+- (instancetype)initWithFrame:(CGRect)frame {
+    // 设置默认的dateKey(赶在父类init之前)
+    self.dateKey = XZHRefreshHeaderUpdatedTimeKey;
+    
+    if (self = [super initWithFrame:frame]) {
+        // 设置为默认状态
+        self.state = XZHRefreshHeaderStateNormal;
+        
+        // 初始化文字
+        [self setTitle:XZHRefreshHeaderPullToRefresh forState:XZHRefreshHeaderStateNormal];
+        [self setTitle:XZHRefreshHeaderReleaseToRefresh forState:XZHRefreshHeaderStatePulling];
+        [self setTitle:XZHRefreshHeaderRefreshing forState:XZHRefreshHeaderStateRefreshing];
+    }
+    return self;
+}
+
+- (void)willMoveToSuperview:(UIView *)newSuperview
+{
+    [super willMoveToSuperview:newSuperview];
+    
+    if (newSuperview) {
+        self.height = XZHRefreshViewHeight;
+    }
+}
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    
+    // 设置自己的位置
+    self.y = - self.height;
+    
+    // 2个标签都隐藏
+    if (self.stateHidden && self.updatedTimeHidden) return;
+    
+    if (self.updatedTimeHidden) { // 显示状态
+        _stateLabel.frame = self.bounds;
+    } else if (self.stateHidden) { // 显示时间
+        self.updatedTimeLabel.frame = self.bounds;
+    } else { // 都显示
+        CGFloat stateH = self.height * 0.55;
+        CGFloat stateW = self.width;
+        // 1.状态标签
+        _stateLabel.frame = CGRectMake(0, 0, stateW, stateH);
+        
+        // 2.时间标签
+        CGFloat updatedTimeY = stateH;
+        CGFloat updatedTimeH = self.height - stateH;
+        CGFloat updatedTimeW = stateW;
+        self.updatedTimeLabel.frame = CGRectMake(0, updatedTimeY, updatedTimeW, updatedTimeH);
+    }
+}
+
+
+
++ (instancetype)header {
     return [[XZHRefreshHeaderView alloc] init];
 }
 
+/*
 - (void)setScrollView:(UIScrollView *)scrollView
 {
     [super setScrollView:scrollView];
@@ -166,5 +263,5 @@
 
 
 
-
+*/
 @end

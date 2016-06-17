@@ -18,6 +18,7 @@ extern const CGFloat XZHRefreshAnimationDuration;
 extern NSString *const XZHRefreshBundleName;
 #define kSrcName(file) [MJRefreshBundleName stringByAppendingPathComponent:file]
 
+extern NSString *const XZHRefreshHeaderUpdatedTimeKey;
 extern NSString *const XZHRefreshFooterPullToRefresh;
 extern NSString *const XZHRefreshFooterReleaseToRefresh;
 extern NSString *const XZHRefreshFooterRefreshing;

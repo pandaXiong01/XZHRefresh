@@ -13,6 +13,7 @@
 		AA0EDB8E1D01269C004EEA34 /* XZHRefreshHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = AA0EDB8D1D01269C004EEA34 /* XZHRefreshHeaderView.m */; };
 		AA0EDB951D012E77004EEA34 /* XZHRefreshConst.m in Sources */ = {isa = PBXBuildFile; fileRef = AA0EDB941D012E77004EEA34 /* XZHRefreshConst.m */; };
 		AA3C78BE1D0560C90025C382 /* XZHRefreshView.m in Sources */ = {isa = PBXBuildFile; fileRef = AA3C78BD1D0560C90025C382 /* XZHRefreshView.m */; };
+		AA4B69AB1D13DAE7004CD0F5 /* UIView+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = AA4B69AA1D13DAE7004CD0F5 /* UIView+Extension.m */; };
 		FEBCA0FB1D00634A003BDFDD /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBCA0FA1D00634A003BDFDD /* main.m */; };
 		FEBCA0FE1D00634A003BDFDD /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBCA0FD1D00634A003BDFDD /* AppDelegate.m */; };
 		FEBCA1011D00634A003BDFDD /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBCA1001D00634A003BDFDD /* ViewController.m */; };
@@ -35,6 +36,8 @@
 		AA0EDB961D018643004EEA34 /* XZHRefresh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XZHRefresh.h; sourceTree = "<group>"; };
 		AA3C78BC1D0560C90025C382 /* XZHRefreshView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XZHRefreshView.h; sourceTree = "<group>"; };
 		AA3C78BD1D0560C90025C382 /* XZHRefreshView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XZHRefreshView.m; sourceTree = "<group>"; };
+		AA4B69A91D13DAE7004CD0F5 /* UIView+Extension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Extension.h"; sourceTree = "<group>"; };
+		AA4B69AA1D13DAE7004CD0F5 /* UIView+Extension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Extension.m"; sourceTree = "<group>"; };
 		FEBCA0F61D00634A003BDFDD /* XZHRefresh.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = XZHRefresh.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FEBCA0FA1D00634A003BDFDD /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		FEBCA0FC1D00634A003BDFDD /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -71,6 +74,8 @@
 				AA0EDB8D1D01269C004EEA34 /* XZHRefreshHeaderView.m */,
 				AA0EDB931D012E77004EEA34 /* XZHRefreshConst.h */,
 				AA0EDB941D012E77004EEA34 /* XZHRefreshConst.m */,
+				AA4B69A91D13DAE7004CD0F5 /* UIView+Extension.h */,
+				AA4B69AA1D13DAE7004CD0F5 /* UIView+Extension.m */,
 				AA0EDB961D018643004EEA34 /* XZHRefresh.h */,
 			);
 			path = XZHRefresh;
@@ -189,6 +194,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AA4B69AB1D13DAE7004CD0F5 /* UIView+Extension.m in Sources */,
 				FEBCA1011D00634A003BDFDD /* ViewController.m in Sources */,
 				FEBCA0FE1D00634A003BDFDD /* AppDelegate.m in Sources */,
 				AA0EDB8B1D012684004EEA34 /* XZHRefreshFooterView.m in Sources */,

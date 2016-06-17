@@ -22,7 +22,21 @@ NSString *const TableViewCellIdentifier = @"cell";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self setupTableView];
+    //[self setupTableView];
+    
+//    UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 120, 100, 100)];
+//    view.backgroundColor = [UIColor redColor];
+//    [self.view addSubview:view];
+//    
+//    [UIView animateWithDuration:2 animations:^{
+//        view.frame = self.view.frame;
+//    } completion:^(BOOL finished) {
+//        //完成
+//    }];
+    
+    //将红色方块在当前位置放大到和屏幕大小一样的动画
+    
+    
     // Do any additional setup after loading the view.
 }
 - (void)setupTableView {
@@ -46,7 +60,7 @@ NSString *const TableViewCellIdentifier = @"cell";
     [self addHeader];
     
     // 3.2.上拉加载更多
-    [self addFooter];
+    //[self addFooter];
     
 }
 - (void)addFooter
@@ -72,49 +86,49 @@ NSString *const TableViewCellIdentifier = @"cell";
 
 - (void)addHeader
 {
-    __unsafe_unretained XZHViewController *vc = self;
-    
-    XZHRefreshHeaderView *header = [XZHRefreshHeaderView header];
-    header.scrollView = self.tableView;
-    header.beginRefreshBlock = ^(XZHRefreshBaseView *refreshView) {
-        // 进入刷新状态就会回调这个Block
-        
-        // 增加5条假数据
-        for (int i = 0; i<5; i++) {
-            int random = arc4random_uniform(1000000);
-            [vc.dataSource insertObject:[NSString stringWithFormat:@"随机数据---%d", random] atIndex:0];
-        }
-        
-        // 模拟延迟加载数据，因此2秒后才调用）
-        // 这里的refreshView其实就是header
-        [vc performSelector:@selector(doneWithView:) withObject:refreshView afterDelay:2.0];
-        
-        NSLog(@"%@----开始进入刷新状态", refreshView.class);
-    };
-    header.endRefreshBlock = ^(XZHRefreshBaseView *refreshView) {
-        // 刷新完毕就会回调这个Block
-        NSLog(@"%@----刷新完毕", refreshView.class);
-    };
-    header.stateChangeBlock = ^(XZHRefreshBaseView *refreshView, XZHRefreshState state) {
-        // 控件的刷新状态切换了就会调用这个block
-        switch (state) {
-            case XZHRefreshStateNormal:
-                NSLog(@"%@----切换到：普通状态", refreshView.class);
-                break;
-                
-            case XZHRefreshStatePulling:
-                NSLog(@"%@----切换到：松开即可刷新的状态", refreshView.class);
-                break;
-                
-            case XZHRefreshStateRefreshing:
-                NSLog(@"%@----切换到：正在刷新状态", refreshView.class);
-                break;
-            default:
-                break;
-        }
-    };
-    [header beginRefresh];
-    _header = header;
+//    __unsafe_unretained XZHViewController *vc = self;
+//    
+//    XZHRefreshHeaderView *header = [XZHRefreshHeaderView header];
+//    header.scrollView = self.tableView;
+//    header.beginRefreshBlock = ^(XZHRefreshBaseView *refreshView) {
+//        // 进入刷新状态就会回调这个Block
+//        
+//        // 增加5条假数据
+//        for (int i = 0; i<5; i++) {
+//            int random = arc4random_uniform(1000000);
+//            [vc.dataSource insertObject:[NSString stringWithFormat:@"随机数据---%d", random] atIndex:0];
+//        }
+//        
+//        // 模拟延迟加载数据，因此2秒后才调用）
+//        // 这里的refreshView其实就是header
+//        [vc performSelector:@selector(doneWithView:) withObject:refreshView afterDelay:2.0];
+//        
+//        NSLog(@"%@----开始进入刷新状态", refreshView.class);
+//    };
+//    header.endRefreshBlock = ^(XZHRefreshBaseView *refreshView) {
+//        // 刷新完毕就会回调这个Block
+//        NSLog(@"%@----刷新完毕", refreshView.class);
+//    };
+//    header.stateChangeBlock = ^(XZHRefreshBaseView *refreshView, XZHRefreshState state) {
+//        // 控件的刷新状态切换了就会调用这个block
+//        switch (state) {
+//            case XZHRefreshStateNormal:
+//                NSLog(@"%@----切换到：普通状态", refreshView.class);
+//                break;
+//                
+//            case XZHRefreshStatePulling:
+//                NSLog(@"%@----切换到：松开即可刷新的状态", refreshView.class);
+//                break;
+//                
+//            case XZHRefreshStateRefreshing:
+//                NSLog(@"%@----切换到：正在刷新状态", refreshView.class);
+//                break;
+//            default:
+//                break;
+//        }
+//    };
+//    [header beginRefresh];
+//    _header = header;
 }
 - (void)doneWithView:(XZHRefreshBaseView *)refreshView
 {
