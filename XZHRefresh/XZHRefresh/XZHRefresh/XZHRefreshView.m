@@ -18,8 +18,10 @@
 
 
 @interface XZHRefreshView ()
-
-
+{
+    id _target;//存储响应目标
+    SEL _action;//存储响应对象方法
+}
 @end
 @implementation XZHRefreshView
 
@@ -103,7 +105,7 @@
 }
 - (void)beginRefreshing
 {
-    
+    ((void (*)(id, SEL, UIView *))objc_msgSend)(self.refreshingTarget, self.refreshingAction, self);
 }
 
 - (void)endRefreshing

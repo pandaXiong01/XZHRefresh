@@ -28,6 +28,7 @@ typedef enum {
 } RefreshViewType;
 
 @interface XZHRefreshView : UIView
+
 @property (weak, nonatomic) id refreshingTarget;
 @property (assign, nonatomic) SEL refreshingAction;
 /** 记录scrollView刚开始的inset */

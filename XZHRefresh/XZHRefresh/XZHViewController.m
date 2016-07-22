@@ -8,6 +8,7 @@
 
 #import "XZHViewController.h"
 #import "XZHRefresh.h"
+#import "XZHRefreshView.h"
 
 NSString *const TableViewCellIdentifier = @"cell";
 
@@ -16,25 +17,17 @@ NSString *const TableViewCellIdentifier = @"cell";
 @property (nonatomic, strong) NSMutableArray *dataSource;
 @property (nonatomic, strong) XZHRefreshHeaderView *header;
 @property (nonatomic, strong) XZHRefreshFooterView *footer;
+@property (nonatomic, strong) XZHRefreshView *refreshView;
 @end
 
 @implementation XZHViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    //[self setupTableView];
     
-//    UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 120, 100, 100)];
-//    view.backgroundColor = [UIColor redColor];
-//    [self.view addSubview:view];
-//    
-//    [UIView animateWithDuration:2 animations:^{
-//        view.frame = self.view.frame;
-//    } completion:^(BOOL finished) {
-//        //完成
-//    }];
+    [self setupTableView];
     
-    //将红色方块在当前位置放大到和屏幕大小一样的动画
+
     
     
     // Do any additional setup after loading the view.
@@ -86,6 +79,8 @@ NSString *const TableViewCellIdentifier = @"cell";
 
 - (void)addHeader
 {
+    self.refreshView = [[XZHRefreshView alloc] init];
+    [_refreshView addRefreshTarget:self action:@selector(refreshAction:)];
 //    __unsafe_unretained XZHViewController *vc = self;
 //    
 //    XZHRefreshHeaderView *header = [XZHRefreshHeaderView header];
@@ -149,8 +144,13 @@ NSString *const TableViewCellIdentifier = @"cell";
     cell.textLabel.text = self.dataSource[indexPath.row];
     return cell;
 }
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [self.refreshView beginRefreshing];
+}
+- (void)refreshAction:(XZHRefreshView *)refreshView {
 
-
+    NSLog(@"开始刷新……");
+}
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
