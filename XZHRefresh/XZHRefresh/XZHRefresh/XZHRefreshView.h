@@ -7,11 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-//typedef enum {
-//    RefreshStateBeginRefreshing,//开始刷新
-//    RefreshStateEndRefreshing//结束刷新
-//    
-//} RefreshState;
+
 typedef enum {
     MJRefreshStatePulling = 1, // 松开就可以进行刷新的状态
     MJRefreshStateNormal = 2, // 普通状态

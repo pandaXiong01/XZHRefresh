@@ -8,10 +8,13 @@
 
 #import "XZHRefreshBaseView.h"
 #import "XZHRefreshConst.h"
+#import "UIView+Extension.h"
+
 @interface XZHRefreshBaseView ()
 
 
 @end
+static const CGFloat animateDuration  =  0.3;
 
 @implementation XZHRefreshBaseView
 #pragma mark 创建一个UILabel
@@ -22,27 +25,16 @@
     label.font = [UIFont boldSystemFontOfSize:size];
     label.backgroundColor = [UIColor clearColor];
     label.textAlignment = NSTextAlignmentCenter;
+    label.textColor = [UIColor lightGrayColor];
     return label;
 }
-#pragma mark - 初始化方法
-- (instancetype)initWithScrollView:(UIScrollView *)scrollView
-{
-    if (self = [super init]) {
-        self.scrollView = scrollView;
-    }
-    return self;
-}
+
 
 - (void)layoutSubviews {
     [super layoutSubviews];
     if (!_hasOriginalInset) {
         self.scrollViewOriginalInset = _scrollView.contentInset;
-        //手动调用KVO
-        [self observeValueForKeyPath:XZHRefreshContentSize ofObject:nil change:nil context:nil];
         self.hasOriginalInset = YES;
-        if (_state == XZHRefreshStateWillRefreshing) {
-            [self setState:XZHRefreshStateRefreshing];
-        }
     }
 }
 
@@ -51,32 +43,35 @@
         //?????
         self.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         self.backgroundColor = [UIColor clearColor];
+        _state = XZHRefreshStateDraging;//默认状态
         //label
-        self.lastUpdateTimeLabel = [self labelWithFontSize:TimeLabelSize];
-        self.statusLabel = [self labelWithFontSize:StatusLabelSize];
-        [self addSubview:_lastUpdateTimeLabel];
+        _statusLabel = [self labelWithFontSize:StatusLabelSize];
         [self addSubview:_statusLabel];
         //方向箭头
-        self.directionImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"arrow"]];
+        _directionImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"arrow"]];
         _directionImage.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
         [self addSubview:_directionImage];
         //指示器
-        UIActivityIndicatorView *activityView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-        activityView.bounds = _directionImage.bounds;
-        activityView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+        _activityView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        _activityView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
         
-        [self setState:XZHRefreshStateNormal];
+        [self addSubview:_activityView];
+        
     }
     return self;
 }
+
+
+
 - (void)setFrame:(CGRect)frame {
     frame.size.height = XZHRefreshViewHeight;
     [super setFrame:frame];
     
     CGFloat w = frame.size.width;
     CGFloat h = frame.size.height;
-    if (w == 0 || _directionImage.center.y == h * 0.5) return;
-    
+    if (w == 0) {
+        return;
+    }
     CGFloat statusX = 0;
     CGFloat statusY = 5;
     CGFloat statusHeight = 20;
@@ -84,15 +79,12 @@
     // 1.状态标签
     _statusLabel.frame = CGRectMake(statusX, statusY, statusWidth, statusHeight);
     
-    // 2.时间标签
-    CGFloat lastUpdateY = statusY + statusHeight + 5;
-    _lastUpdateTimeLabel.frame = CGRectMake(statusX, lastUpdateY, statusWidth, statusHeight);
-    
-    // 3.箭头
-    CGFloat arrowX = w * 0.5 - 100;
+    // 2.箭头
+    CGFloat arrowX = w * 0.35;
     _directionImage.center = CGPointMake(arrowX, h * 0.5);
     
-    // 4.指示器
+    // 3.指示器
+    _activityView.bounds = _directionImage.bounds;
     _activityView.center = _directionImage.center;
     
     
@@ -102,33 +94,142 @@
     bounds.size.height = XZHRefreshViewHeight;
     [super setBounds:bounds];
 }
-#pragma mark 设置UIScrollView
-- (void)setScrollView:(UIScrollView *)scrollView
+
+
+- (void)setStatusLabelText {
+    switch (_state) {
+        case XZHRefreshStateDraging:
+            _statusLabel.text = _dragText;
+            break;
+        case XZHRefreshStateLetOffRefreshing:
+            _statusLabel.text = _letOffText;
+            break;
+        case XZHRefreshStateRefreshing:
+            _statusLabel.text = _refreshingText;
+            break;
+            
+        default:
+            break;
+    }
+}
+
+#pragma mark 设置状态
+
+- (void)setState:(XZHRefreshState)state
 {
-    // 移除之前的监听器 ?????
-    [_scrollView removeObserver:self forKeyPath:XZHRefreshContentOffset context:nil];
-    // 监听contentOffset
-    [scrollView addObserver:self forKeyPath:XZHRefreshContentOffset options:NSKeyValueObservingOptionNew context:nil];
     
-    // 设置scrollView
-    _scrollView = scrollView;
-    [_scrollView addSubview:self];
+    // 1.一样的就直接返回
+    if (self.state == state) return;
+    
+    // 2.根据状态执行不同的操作
+    switch (state) {
+        case XZHRefreshStateNormal: // 普通状态
+        {
+            // 显示箭头
+            self.directionImage.hidden = NO;
+            // 停止转圈圈
+            [self.activityView stopAnimating];
+            
+            // 说明是刚刷新完毕 回到 普通状态的
+            if (XZHRefreshStateRefreshing == self.state) {
+                //刷新完毕
+                
+                    _directionImage.transform = CGAffineTransformIdentity;
+                
+                    
+                    [UIView animateWithDuration:animateDuration animations:^{
+                        UIEdgeInsets inset = self.scrollView.contentInset;
+                        inset.top -=  self.height;
+                        
+                        self.scrollView.contentInset = inset;
+                        
+//#warning 这句代码修复了，top值不断累加的bug
+//                        if (self.scrollViewOriginalInset.top == 0) {
+//                            self.scrollView.mj_contentInsetTop = 0;
+//                        } else if (self.scrollViewOriginalInset.top == self.scrollView.mj_contentInsetTop) {
+//                            self.scrollView.mj_contentInsetTop -= self.mj_height;
+//                        } else {
+//                            self.scrollView.mj_contentInsetTop = self.scrollViewOriginalInset.top;
+//                        }
+                    }];
+               
+
+                
+            } else {
+                // 执行动画
+                [UIView animateWithDuration:animateDuration animations:^{
+                    _directionImage.transform = CGAffineTransformIdentity;
+                }];
+            }
+            
+        }
+            break;
+            
+        case XZHRefreshStateLetOffRefreshing:
+        {
+            // 执行动画
+            [UIView animateWithDuration:animateDuration animations:^{
+                _directionImage.transform = CGAffineTransformMakeRotation(M_PI);
+            }];
+        }
+            break;
+            
+        case XZHRefreshStateRefreshing:
+        {
+            // 开始转圈圈
+
+            [self.activityView startAnimating];
+            // 隐藏箭头
+            self.directionImage.hidden = YES;
+            self.directionImage.transform = CGAffineTransformIdentity;
+            // 执行动画
+            [UIView animateWithDuration:animateDuration animations:^{
+                // 1.增加滚动区域
+                CGFloat top = self.scrollViewOriginalInset.top + self.height;
+                UIEdgeInsets inset = self.scrollView.contentInset;
+                inset.top = top;
+                self.scrollView.contentInset = inset;
+                
+                // 2.设置滚动位置
+                CGPoint offset = self.scrollView.contentOffset;
+                offset.y = - top;
+                self.scrollView.contentOffset = offset;
+                
+            }];
+            
+            //开始刷新
+        }
+            
+            break;
+        case XZHRefreshStateDraging:
+        {
+            if (_state == XZHRefreshStateLetOffRefreshing) {
+                // 执行动画  转换一下方向
+                [UIView animateWithDuration:animateDuration animations:^{
+                    _directionImage.transform = CGAffineTransformIdentity;
+                }];
+            }
+            
+        }
+            break;
+        default:
+            break;
+    }
+    
+    // 3.存储状态
+    _state = state;
+    
+    [self setStatusLabelText];
 }
 
 
 #pragma mark 设置状态
-- (void)setState:(XZHRefreshState)state
-{
-    
-}
 
 - (void)beginRefresh {
     
     
 }
-- (void)endRefresh {
-    
-}
+
 //结束时释放资源
 - (void)free {
     

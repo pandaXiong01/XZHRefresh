@@ -23,9 +23,9 @@ extern NSString *const XZHRefreshFooterPullToRefresh;
 extern NSString *const XZHRefreshFooterReleaseToRefresh;
 extern NSString *const XZHRefreshFooterRefreshing;
 
-extern NSString *const XZHRefreshHeaderPullToRefresh;
-extern NSString *const XZHRefreshHeaderReleaseToRefresh;
-extern NSString *const XZHRefreshHeaderRefreshing;
+extern NSString *const XZHRefreshHeaderDragText;
+extern NSString *const XZHRefreshHeaderLetOffText;
+extern NSString *const XZHRefreshHeaderRefreshingText;
 extern NSString *const XZHRefreshHeaderTimeKey;
 
 extern NSString *const XZHRefreshContentOffset;

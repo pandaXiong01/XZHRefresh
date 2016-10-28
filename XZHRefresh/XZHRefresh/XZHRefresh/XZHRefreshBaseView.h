@@ -12,66 +12,52 @@
  控件状态
  */
 typedef enum {
-    XZHRefreshStatePulling = 1, // 松开就可以进行刷新的状态
-    XZHRefreshStateNormal,   // 普通状态/拖拽
+    XZHRefreshStateDraging = 1, // 拖拽
+    XZHRefreshStateNormal,   // 普通状态
     XZHRefreshStateRefreshing,//刷新中……
-    XZHRefreshStateWillRefreshing//
+    XZHRefreshStateLetOffRefreshing//松开就可以进行刷新的状态
     
 } XZHRefreshState;
-/**
- 控件类型
- */
-typedef enum {
-    XZHRefreshHeaderType = -1,
-    XZHRefreshFooterType = 1
-    
-} XZHRefreshViewType;
 
 
-/**
- *  Block回调
- */
-typedef void (^BeginRefreshBlock)(XZHRefreshBaseView *refreshView);
-typedef void (^EndRefreshBlock)(XZHRefreshBaseView *refreshView);
-typedef void (^RefreshStateChangeBlock)(XZHRefreshBaseView *refreshView, XZHRefreshState state);
-
-/**
- *  协议代理
- */
-@protocol XZHRefreshBaseViewDelegate <NSObject>
-
-- (void)refreshViewBeginRefresh:(XZHRefreshBaseView *)refreshView;
-- (void)refreshViewEndRefresh:(XZHRefreshBaseView *)refreshView;
-- (void)refreshView:(XZHRefreshBaseView *)refreshView changeState:(XZHRefreshState)state;
-@end
 
 
 
 @interface XZHRefreshBaseView : UIView
-
+//刷新控件添加到scrollView
 @property (nonatomic, weak) UIScrollView *scrollView;
 /**
- *  block回调
+ *  开始进入刷新状态的监听器
  */
-@property (nonatomic, copy) BeginRefreshBlock beginRefreshBlock;
-@property (nonatomic, copy) EndRefreshBlock endRefreshBlock;
-@property (nonatomic, copy) RefreshStateChangeBlock stateChangeBlock;
-@property (nonatomic, weak) id<XZHRefreshBaseViewDelegate>delegate;
-@property (nonatomic) XZHRefreshViewType refreshType;
+@property (weak, nonatomic) id beginRefreshingTaget;
+/**
+ *  开始进入刷新状态的监听方法
+ */
+@property (assign, nonatomic) SEL beginRefreshingAction;
+
+
 @property (nonatomic) XZHRefreshState state;
 @property (nonatomic, readonly) BOOL isRefreshing;
 /**
  *  视图
  */
-@property (nonatomic, strong) UILabel *lastUpdateTimeLabel;
+
 @property (nonatomic, strong) UILabel *statusLabel;
 @property (nonatomic, strong) UIImageView *directionImage;//下拉上拉方向
 @property (nonatomic, strong) UIActivityIndicatorView *activityView;;
 @property (nonatomic) UIEdgeInsets scrollViewOriginalInset;
 @property (nonatomic) BOOL hasOriginalInset;
 
+/*
+ 刷新文字
+ */
+ @property (copy, nonatomic) NSString *dragText; // 下拉可以刷新
+ @property (copy, nonatomic) NSString *letOffText; // 松开立即刷新
+ @property (copy, nonatomic) NSString *refreshingText; // 正在帮你刷新...
+
+- (void)setStatusLabelText;
 - (void)beginRefresh;
-- (void)endRefresh;
+//- (void)endRefresh;
 //结束时释放资源
 - (void)free;
 /**

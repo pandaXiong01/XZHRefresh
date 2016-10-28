@@ -32,15 +32,7 @@
     // Drawing code
 }
 */
-+ (XZHRefreshView *)refreshViewAtScrollView:(UIScrollView *)scrollView WithType:(RefreshViewType)type {
-    if (type == RefreshHeaderType) {
-        return [XZHRefreshHeaderView header];
-    } else if (type == RefreshFooterType) {
-        return [XZHRefreshFooterView footer];
-    } else {
-        return nil;
-    }
-}
+
 
 - (instancetype)initWithFrame:(CGRect)frame
 {

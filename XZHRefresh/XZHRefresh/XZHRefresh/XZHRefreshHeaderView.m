@@ -11,79 +11,26 @@
 #import "UIView+Extension.h"
 
 @interface XZHRefreshHeaderView ()
-/** 显示上次刷新时间的标签 */
-@property (weak, nonatomic) UILabel *updatedTimeLabel;
-/** 上次刷新时间 */
-@property (strong, nonatomic) NSDate *updatedTime;
-/** 显示状态文字的标签 */
-@property (weak, nonatomic) UILabel *stateLabel;
-/** 所有状态对应的文字 */
-@property (strong, nonatomic) NSMutableDictionary *stateTitles;
 
 @end
 
 
 @implementation XZHRefreshHeaderView
-#pragma mark - 懒加载
-- (NSMutableDictionary *)stateTitles
-{
-    if (!_stateTitles) {
-        self.stateTitles = [NSMutableDictionary dictionary];
-    }
-    return _stateTitles;
-}
 
-- (UILabel *)stateLabel
-{
-    if (!_stateLabel) {
-        UILabel *stateLabel = [[UILabel alloc] init];
-        stateLabel.backgroundColor = [UIColor clearColor];
-        stateLabel.textAlignment = NSTextAlignmentCenter;
-        [self addSubview:_stateLabel = stateLabel];
-    }
-    return _stateLabel;
-}
-
-- (UILabel *)updatedTimeLabel
-{
-    if (!_updatedTimeLabel) {
-        // 1.创建控件
-        UILabel *updatedTimeLabel = [[UILabel alloc] init];
-        updatedTimeLabel.backgroundColor = [UIColor clearColor];
-        updatedTimeLabel.textAlignment = NSTextAlignmentCenter;
-        [self addSubview:_updatedTimeLabel = updatedTimeLabel];
-        
-        // 2.设置更新时间
-        self.updatedTime = [[NSUserDefaults standardUserDefaults] objectForKey:self.dateKey];
-    }
-    return _updatedTimeLabel;
-}
 
 #pragma mark - 初始化方法
 - (instancetype)initWithFrame:(CGRect)frame {
-    // 设置默认的dateKey(赶在父类init之前)
-    self.dateKey = XZHRefreshHeaderUpdatedTimeKey;
-    
+
     if (self = [super initWithFrame:frame]) {
-        // 设置为默认状态
-        self.state = XZHRefreshHeaderStateNormal;
-        
         // 初始化文字
-        [self setTitle:XZHRefreshHeaderPullToRefresh forState:XZHRefreshHeaderStateNormal];
-        [self setTitle:XZHRefreshHeaderReleaseToRefresh forState:XZHRefreshHeaderStatePulling];
-        [self setTitle:XZHRefreshHeaderRefreshing forState:XZHRefreshHeaderStateRefreshing];
+        [self setTitle:XZHRefreshHeaderDragText forState:XZHRefreshStateDraging];
+        [self setTitle:XZHRefreshHeaderLetOffText forState:XZHRefreshStateLetOffRefreshing];
+        [self setTitle:XZHRefreshHeaderRefreshingText forState:XZHRefreshStateRefreshing];
+        [self setStatusLabelText];
     }
     return self;
 }
 
-- (void)willMoveToSuperview:(UIView *)newSuperview
-{
-    [super willMoveToSuperview:newSuperview];
-    
-    if (newSuperview) {
-        self.height = XZHRefreshViewHeight;
-    }
-}
 
 - (void)layoutSubviews
 {
@@ -91,177 +38,119 @@
     
     // 设置自己的位置
     self.y = - self.height;
+    self.statusLabel.frame = self.bounds;
     
-    // 2个标签都隐藏
-    if (self.stateHidden && self.updatedTimeHidden) return;
+}
+
+- (void)willMoveToSuperview:(UIView *)newSuperview
+{
+    [super willMoveToSuperview:newSuperview];
     
-    if (self.updatedTimeHidden) { // 显示状态
-        _stateLabel.frame = self.bounds;
-    } else if (self.stateHidden) { // 显示时间
-        self.updatedTimeLabel.frame = self.bounds;
-    } else { // 都显示
-        CGFloat stateH = self.height * 0.55;
-        CGFloat stateW = self.width;
-        // 1.状态标签
-        _stateLabel.frame = CGRectMake(0, 0, stateW, stateH);
+    if (newSuperview) {
+        // 移除之前的监听器
+        [self.scrollView removeObserver:self forKeyPath:XZHRefreshContentOffset context:nil];
+        // 监听contentOffset
+        [newSuperview addObserver:self forKeyPath:XZHRefreshContentOffset options:NSKeyValueObservingOptionNew context:nil];
+        self.height = XZHRefreshViewHeight;
         
-        // 2.时间标签
-        CGFloat updatedTimeY = stateH;
-        CGFloat updatedTimeH = self.height - stateH;
-        CGFloat updatedTimeW = stateW;
-        self.updatedTimeLabel.frame = CGRectMake(0, updatedTimeY, updatedTimeW, updatedTimeH);
+        
+        // 设置宽度
+        self.width = newSuperview.width;
+        // 设置位置
+        self.x = 0;
+        // 记录UIScrollView
+        self.scrollView = (UIScrollView *)newSuperview;
+        // 设置永远支持垂直弹簧效果
+        self.scrollView.alwaysBounceVertical = YES;
+        // 记录UIScrollView最开始的contentInset
+        self.scrollViewOriginalInset = self.scrollView.contentInset;
+        
+        
     }
 }
 
 
 
-+ (instancetype)header {
-    return [[XZHRefreshHeaderView alloc] init];
++ (instancetype)headerWithRefreshingTarget:(id)target refreshingAction:(SEL)action {
+    XZHRefreshHeaderView *headerView = [[XZHRefreshHeaderView alloc] init];
+    headerView.beginRefreshingTaget = target;
+    headerView.beginRefreshingAction = action;
+    return headerView;
 }
 
-/*
-- (void)setScrollView:(UIScrollView *)scrollView
-{
-    [super setScrollView:scrollView];
-    
-    // 1.设置边框
-    self.frame = CGRectMake(0, - XZHRefreshViewHeight, scrollView.frame.size.width, XZHRefreshViewHeight);
-    
-    // 2.加载时间
-    self.lastUpdateTime = [[NSUserDefaults standardUserDefaults] objectForKey:XZHRefreshHeaderTimeKey];
-}
+
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
+    // 不能跟用户交互就直接返回
+    if (!self.userInteractionEnabled || self.alpha <= 0.01 || self.hidden) return;
     
-    if (![keyPath isEqualToString:XZHRefreshContentOffset]) {
-        return;
+    // 如果正在刷新，直接返回
+    if (self.state == XZHRefreshStateRefreshing ) return;
+
+    if ([XZHRefreshContentOffset isEqualToString:keyPath]) {
+        [self adjustStateWithContentOffset];
     }
+}
+- (void)adjustStateWithContentOffset {
+    //在正在加载时scrollViewOriginalInset发生变化
+    self.scrollViewOriginalInset = self.scrollView.contentInset;
     
-    if (!self.userInteractionEnabled || self.alpha <= 0.01 || self.hidden
-        || self.state == XZHRefreshStateRefreshing) {
-        return;
-    }
+    // 当前的contentOffset
+    CGFloat currentOffsetY = self.scrollView.contentOffset.y; //往下拉变负
+    // 头部控件刚好出现的offsetY
+    CGFloat OriginalOffsetY = - self.scrollViewOriginalInset.top;  //有导航栏时-64
     
-    // scrollView所滚动的Y值 * 控件的类型（头部控件是-1，尾部控件是1）
-    CGFloat offsetY = self.scrollView.contentOffset.y * self.refreshType;
-    CGFloat validY = 100;//self.validY;
-    if (offsetY <= validY) {
+    NSLog(@"currentOffsetY:%f  happenOffsetY:%f", currentOffsetY , OriginalOffsetY);
+    // 如果是向上滚动到看不见头部控件，直接返回
+    if (currentOffsetY >= OriginalOffsetY) {
         return;
     }
     
     if (self.scrollView.isDragging) {
-        //拖拽中（）validOffsetY = validY + MJRefreshViewHeight;  validY加不加都可以
-        CGFloat validOffsetY = validY + XZHRefreshViewHeight;
-        if (self.state == XZHRefreshStatePulling && offsetY <= validOffsetY) {
-            //全程拖拽中，虽然到达高度，但是自己又拉回来，还是回到正常状态
-            // 转为普通状态
-            [self setState:XZHRefreshStateNormal];
-            // 通知代理
-            if ([self.delegate respondsToSelector:@selector(refreshView:changeState:)]) {
-                [self.delegate refreshView:self changeState:XZHRefreshStateNormal];
-            }
-            
-            // 回调
-            if (self.stateChangeBlock) {
-                self.stateChangeBlock(self, XZHRefreshStateNormal);
-            }
-        } else if (self.state == XZHRefreshStateNormal && offsetY > validOffsetY) {
+        // 即将刷新 的临界点
+        CGFloat LetOffsetY = OriginalOffsetY - self.height;
+        
+        if (self.state == XZHRefreshStateDraging && currentOffsetY < LetOffsetY) {
             // 转为即将刷新状态
-            [self setState:XZHRefreshStatePulling];
-            // 通知代理
-            if ([self.delegate respondsToSelector:@selector(refreshView:changeState:)]) {
-                [self.delegate refreshView:self changeState:XZHRefreshStatePulling];
-            }
-            
-            // 回调
-            if (self.stateChangeBlock) {
-                self.stateChangeBlock(self, XZHRefreshStatePulling);
-            }
+            self.state = XZHRefreshStateLetOffRefreshing  ;
+        } else if (self.state == XZHRefreshStateLetOffRefreshing && currentOffsetY >= LetOffsetY) {
+            // 转为普通拖拽状态
+            self.state = XZHRefreshStateDraging;
+        }else if (self.state == XZHRefreshStateNormal && currentOffsetY >= LetOffsetY) {
+            self.state = XZHRefreshStateDraging;
         }
-    } else { // 即将刷新 && 手松开
-        if (self.state == XZHRefreshStatePulling) {
-            // 开始刷新
-            [self setState:XZHRefreshStateRefreshing];
-            // 通知代理
-            if ([self.delegate respondsToSelector:@selector(refreshView:changeState:)]) {
-                [self.delegate refreshView:self changeState:XZHRefreshStateRefreshing];
-            }
-            
-            
-            // 回调
-            if (self.stateChangeBlock) {
-                self.stateChangeBlock(self, XZHRefreshStateRefreshing);
-            }
-        }
+    } else if (self.state == XZHRefreshStateLetOffRefreshing) {// 即将刷新 && 手松开
+        // 开始刷新
+        self.state = XZHRefreshStateRefreshing;
     }
+
 }
 
-#pragma mark 设置状态
-- (void)setState:(XZHRefreshState)state
-{
-    if (self.state != XZHRefreshStateRefreshing) {
-        // 存储当前的contentInset
-        self.scrollViewOriginalInset = self.scrollView.contentInset;
-    }
-    
-    // 1.一样的就直接返回
-    if (self.state == state) return;
-    
-    // 2.根据状态执行不同的操作
+- (void)setTitle:(NSString *)title forState:(XZHRefreshState)state {
     switch (state) {
-        case XZHRefreshStateNormal: // 普通状态
-            // 显示箭头
-            self.directionImage.hidden = NO;
-            // 停止转圈圈
-            [self.activityView stopAnimating];
-            
-            // 说明是刚刷新完毕 回到 普通状态的
-            if (XZHRefreshStateRefreshing == self.state) {
-                // 通知代理
-                if ([self.delegate respondsToSelector:@selector(refreshViewEndRefresh:)]) {
-                    [self.delegate refreshViewEndRefresh:self];
-                }
-                
-                // 回调
-                if (self.endRefreshBlock) {
-                    self.endRefreshBlock(self);
-                }
-            }
-            
+        case XZHRefreshStateDraging:
+        {
+            self.dragText = title;
+        }
             break;
-            
-        case XZHRefreshStatePulling:
+        case XZHRefreshStateLetOffRefreshing:
+        {
+            self.letOffText = title;
+        }
             break;
-            
         case XZHRefreshStateRefreshing:
-            // 开始转圈圈
-            [self.activityView startAnimating];
-            // 隐藏箭头
-            self.directionImage.hidden = YES;
-            self.directionImage.transform = CGAffineTransformIdentity;
-            
-            // 通知代理
-            if ([self.delegate respondsToSelector:@selector(refreshViewBeginRefresh:)]) {
-                [self.delegate refreshViewBeginRefresh:self];
-            }
-            
-            // 回调
-            if (self.beginRefreshBlock) {
-                self.beginRefreshBlock(self);
-            }
+        {
+            self.refreshingText = title;
+        }
             break;
+            
         default:
             break;
     }
-    
-    // 3.存储状态
-    self.state = state;
-    
-    
+}
+- (void)endRefresh {
+    self.state = XZHRefreshStateNormal;
 }
 
-
-
-*/
 @end

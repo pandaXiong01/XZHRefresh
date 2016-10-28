@@ -8,7 +8,7 @@
 
 #import "XZHViewController.h"
 #import "XZHRefresh.h"
-#import "XZHRefreshView.h"
+
 
 NSString *const TableViewCellIdentifier = @"cell";
 
@@ -17,7 +17,6 @@ NSString *const TableViewCellIdentifier = @"cell";
 @property (nonatomic, strong) NSMutableArray *dataSource;
 @property (nonatomic, strong) XZHRefreshHeaderView *header;
 @property (nonatomic, strong) XZHRefreshFooterView *footer;
-@property (nonatomic, strong) XZHRefreshView *refreshView;
 @end
 
 @implementation XZHViewController
@@ -27,7 +26,8 @@ NSString *const TableViewCellIdentifier = @"cell";
     
     [self setupTableView];
     
-
+    UIBarButtonItem * rightBtn = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:self action:@selector(handleStopRefresh)];
+    self.navigationItem.rightBarButtonItem = rightBtn;
     
     
     // Do any additional setup after loading the view.
@@ -58,6 +58,7 @@ NSString *const TableViewCellIdentifier = @"cell";
 }
 - (void)addFooter
 {
+    
 //    __unsafe_unretained XZHViewController *vc = self;
 //    MJRefreshFooterView *footer = [MJRefreshFooterView footer];
 //    footer.scrollView = self.tableView;
@@ -79,59 +80,36 @@ NSString *const TableViewCellIdentifier = @"cell";
 
 - (void)addHeader
 {
-    self.refreshView = [[XZHRefreshView alloc] init];
-    [_refreshView addRefreshTarget:self action:@selector(refreshAction:)];
-//    __unsafe_unretained XZHViewController *vc = self;
-//    
-//    XZHRefreshHeaderView *header = [XZHRefreshHeaderView header];
-//    header.scrollView = self.tableView;
-//    header.beginRefreshBlock = ^(XZHRefreshBaseView *refreshView) {
-//        // 进入刷新状态就会回调这个Block
-//        
-//        // 增加5条假数据
-//        for (int i = 0; i<5; i++) {
-//            int random = arc4random_uniform(1000000);
-//            [vc.dataSource insertObject:[NSString stringWithFormat:@"随机数据---%d", random] atIndex:0];
-//        }
-//        
-//        // 模拟延迟加载数据，因此2秒后才调用）
-//        // 这里的refreshView其实就是header
-//        [vc performSelector:@selector(doneWithView:) withObject:refreshView afterDelay:2.0];
-//        
-//        NSLog(@"%@----开始进入刷新状态", refreshView.class);
-//    };
-//    header.endRefreshBlock = ^(XZHRefreshBaseView *refreshView) {
-//        // 刷新完毕就会回调这个Block
-//        NSLog(@"%@----刷新完毕", refreshView.class);
-//    };
-//    header.stateChangeBlock = ^(XZHRefreshBaseView *refreshView, XZHRefreshState state) {
-//        // 控件的刷新状态切换了就会调用这个block
-//        switch (state) {
-//            case XZHRefreshStateNormal:
-//                NSLog(@"%@----切换到：普通状态", refreshView.class);
-//                break;
-//                
-//            case XZHRefreshStatePulling:
-//                NSLog(@"%@----切换到：松开即可刷新的状态", refreshView.class);
-//                break;
-//                
-//            case XZHRefreshStateRefreshing:
-//                NSLog(@"%@----切换到：正在刷新状态", refreshView.class);
-//                break;
-//            default:
-//                break;
-//        }
-//    };
-//    [header beginRefresh];
-//    _header = header;
+    self.tableView.refreshHeader = [XZHRefreshHeaderView headerWithRefreshingTarget:self refreshingAction:@selector(refreshAction)];
+    /*
+    __unsafe_unretained XZHViewController *vc = self;
+    
+    XZHRefreshHeaderView *header = [XZHRefreshHeaderView header];
+    header.scrollView = self.tableView;
+    header.beginRefreshBlock = ^(XZHRefreshBaseView *refreshView) {
+        // 进入刷新状态就会回调这个Block
+        
+        // 增加5条假数据
+        for (int i = 0; i<5; i++) {
+            int random = arc4random_uniform(1000000);
+            [vc.dataSource insertObject:[NSString stringWithFormat:@"随机数据---%d", random] atIndex:0];
+        }
+        
+        // 模拟延迟加载数据，因此2秒后才调用）
+        // 这里的refreshView其实就是header
+        [vc performSelector:@selector(doneWithView:) withObject:refreshView afterDelay:2.0];
+        
+        NSLog(@"%@----开始进入刷新状态", refreshView.class);
+    };
+    [header beginRefresh];
+    _header = header;
+     */
 }
-- (void)doneWithView:(XZHRefreshBaseView *)refreshView
-{
-    // 刷新表格
-    [self.tableView reloadData];
-    // (最好在刷新表格后调用)调用endRefreshing可以结束刷新状态
-    [refreshView endRefresh];
+
+- (void)refreshAction {
+
 }
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     return self.dataSource.count;
@@ -145,11 +123,11 @@ NSString *const TableViewCellIdentifier = @"cell";
     return cell;
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [self.refreshView beginRefreshing];
+    
 }
-- (void)refreshAction:(XZHRefreshView *)refreshView {
+- (void)handleStopRefresh {
+    [self.tableView.refreshHeader endRefresh];
 
-    NSLog(@"开始刷新……");
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
