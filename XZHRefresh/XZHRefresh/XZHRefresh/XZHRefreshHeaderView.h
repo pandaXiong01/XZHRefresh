@@ -24,5 +24,5 @@
 @property (assign, nonatomic) CGFloat pullingPercent;
 
 + (instancetype)headerWithRefreshingTarget:(id)target refreshingAction:(SEL)action;
-- (void)endRefresh;
+
 @end

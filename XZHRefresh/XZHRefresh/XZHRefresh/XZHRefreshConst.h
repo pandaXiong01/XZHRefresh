@@ -15,13 +15,10 @@ extern const NSInteger StatusLabelSize;
 extern const CGFloat XZHRefreshViewHeight;
 extern const CGFloat XZHRefreshAnimationDuration;
 
-extern NSString *const XZHRefreshBundleName;
-#define kSrcName(file) [MJRefreshBundleName stringByAppendingPathComponent:file]
 
-extern NSString *const XZHRefreshHeaderUpdatedTimeKey;
-extern NSString *const XZHRefreshFooterPullToRefresh;
-extern NSString *const XZHRefreshFooterReleaseToRefresh;
+
 extern NSString *const XZHRefreshFooterRefreshing;
+extern NSString *const XZHRefreshFooterNoData;
 
 extern NSString *const XZHRefreshHeaderDragText;
 extern NSString *const XZHRefreshHeaderLetOffText;
@@ -30,3 +27,4 @@ extern NSString *const XZHRefreshHeaderTimeKey;
 
 extern NSString *const XZHRefreshContentOffset;
 extern NSString *const XZHRefreshContentSize;
+extern NSString *const XZHRefreshPanState;

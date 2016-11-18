@@ -18,10 +18,7 @@
 
 
 @interface XZHRefreshView ()
-{
-    id _target;//存储响应目标
-    SEL _action;//存储响应对象方法
-}
+
 @end
 @implementation XZHRefreshView
 
@@ -33,21 +30,6 @@
 }
 */
 
-
-- (instancetype)initWithFrame:(CGRect)frame
-{
-    if (self = [super initWithFrame:frame]) {
-        // 基本属性
-        self.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-        self.backgroundColor = [UIColor clearColor];
-        
-        // 默认文字颜色和字体大小
-#warning 稍后设置
-//        self.textColor = MJRefreshLabelTextColor;
-//        self.font = MJRefreshLabelFont;
-    }
-    return self;
-}
 
 
 - (void)willMoveToSuperview:(UIView *)newSuperview {
@@ -72,41 +54,29 @@
     }
     
 }
-#pragma mark -- 子类重写方法
-- (void)addRefreshTarget:(id)target action:(SEL)action {
-    //子类实现
-    self.refreshingTarget = target;
-    self.refreshingAction = action;
-    
-    if ([self.refreshingTarget respondsToSelector:self.refreshingAction]) {
-        //需要将objc_msgSend重新声明成自己想要的参数
-        ((void (*)(id, SEL, UIView *))objc_msgSend)(self.refreshingTarget, self.refreshingAction, self);
-        /**
-         *  详情请参照苹果官方文档  Listing 2-14 Using a cast to call the Objective-C message sending functions。
-         - (int) doSomething:(int) x { ... }
-         - (void) doSomethingElse {
-         int (*action)(id, SEL, int) = (int (*)(id, SEL, int)) objc_msgSend;
-         action(self, @selector(doSomething:), 0);
-         }
-         
-         */
-    
-        //msgSend(msgTarget(self.refreshingTarget), self.refreshingAction, self);
-    
-    }
-}
-- (void)beginRefreshing
-{
-    ((void (*)(id, SEL, UIView *))objc_msgSend)(self.refreshingTarget, self.refreshingAction, self);
+
+- (void)beginRefreshing {
+    self.state = XZHRefreshStateRefreshing;
 }
 
-- (void)endRefreshing
-{
-    
+- (void)endRefreshing {
+    self.state = XZHRefreshStateNormal;
 }
 
 - (BOOL)isRefreshing {
     return NO;
 }
 
+/*
+ 一.分为三层  
+ 1.基类 XZHRefreshView 开始结束刷新方法，添加到父试图方法；持有scrollView控件 最初的偏移量。
+ 2.XZHRefreshHeaderView   下拉与上拉的基类  在这里检测视图的偏移量根据偏移量改变控件的状态，控制刷新时的偏移量。
+ 3.使用的控件  这里绘制使用控件的视图 使用state的set方法，改变控件上子视图的文字与动画状态。
+ 
+ 
+ 二、注意事项
+ 1.下拉控件 在显示cell不到整个屏幕时候隐藏
+ 2.上拉加载-》设置没有更多数据（不再触发上拉加载）    在用户再次刷新的时候 回复上拉加载
+ 3.检测tableView刷新 回调时获取dataSource 如果没有数据则不显示footer
+ */
 @end

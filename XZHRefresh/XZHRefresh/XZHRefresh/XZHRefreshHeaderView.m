@@ -72,7 +72,7 @@
 
 
 + (instancetype)headerWithRefreshingTarget:(id)target refreshingAction:(SEL)action {
-    XZHRefreshHeaderView *headerView = [[XZHRefreshHeaderView alloc] init];
+    XZHRefreshHeaderView *headerView = [[self alloc] init];
     headerView.beginRefreshingTaget = target;
     headerView.beginRefreshingAction = action;
     return headerView;
@@ -149,8 +149,6 @@
             break;
     }
 }
-- (void)endRefresh {
-    self.state = XZHRefreshStateNormal;
-}
+
 
 @end

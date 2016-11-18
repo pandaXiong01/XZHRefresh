@@ -11,6 +11,8 @@
 #import "UIScrollView+XZHRefresh.h"
 #import "XZHRefreshHeaderView.h"
 #import "XZHRefreshFooterView.h"
+#import "XZHRefreshGeneralFooterView.h"
+
 #endif /* XZHRefresh_h */
 //1.下拉刷新   向下箭头+下拉刷新； 菊花+正在刷新数据……   2.上拉加载   菊花+加载中……
 /*

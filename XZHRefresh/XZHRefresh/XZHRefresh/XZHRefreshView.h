@@ -7,21 +7,19 @@
 //
 
 #import <UIKit/UIKit.h>
-
-typedef enum {
-    MJRefreshStatePulling = 1, // 松开就可以进行刷新的状态
-    MJRefreshStateNormal = 2, // 普通状态
-    MJRefreshStateRefreshing = 3, // 正在刷新中的状态
-    MJRefreshStateWillRefreshing = 4
-} MJRefreshState;
-
+#import "XZHRefreshConst.h"
+#import "UIView+Extension.h"
 /**
- 控件类型
+ 控件状态
  */
 typedef enum {
-    RefreshHeaderType,
-    RefreshFooterType
-} RefreshViewType;
+    XZHRefreshStateDraging = 1, // 拖拽范围超过tableView的contentView（露出header头还没到可以放开刷新的时候，footer一到底开始刷新没有该状态）
+    XZHRefreshStateNormal,   // 普通状态
+    XZHRefreshStateRefreshing,//刷新中……
+    XZHRefreshStateLetOffRefreshing,//松开就可以进行刷新的状态
+    XZHRefreshStateNoMoreData //加载没有更多数据了
+} XZHRefreshState;
+
 
 @interface XZHRefreshView : UIView
 
@@ -31,21 +29,12 @@ typedef enum {
 @property (assign, nonatomic) UIEdgeInsets scrollViewOriginalInset;
 /** 父控件 */
 @property (nonatomic, weak) UIScrollView *scrollView;
-//@property (nonatomic, weak) UILabel *lastUpdateTimeLabel;
-//@property (nonatomic, weak) UILabel *statusLabel;
-//@property (nonatomic, weak) UIImageView *arrowImage;
-//@property (nonatomic, weak) UIActivityIndicatorView *activityView;
 
-
-- (void)addRefreshTarget:(id)target action:(SEL)action;
-
-+ (XZHRefreshView *)refreshViewAtScrollView:(UIScrollView *)scrollView WithType:(RefreshViewType)type;
-
+@property (nonatomic, assign) XZHRefreshState state;
 /** 进入刷新状态 */
 - (void)beginRefreshing;
 /** 结束刷新状态 */
 - (void)endRefreshing;
-/** 是否正在刷新 */
-- (BOOL)isRefreshing;
+
 
 @end

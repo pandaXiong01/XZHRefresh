@@ -7,17 +7,18 @@
 //
 
 #import <UIKit/UIKit.h>
-@class XZHRefreshBaseView;
+#import "XZHRefreshView.h"
+
 /**
  控件状态
  */
-typedef enum {
-    XZHRefreshStateDraging = 1, // 拖拽
-    XZHRefreshStateNormal,   // 普通状态
-    XZHRefreshStateRefreshing,//刷新中……
-    XZHRefreshStateLetOffRefreshing//松开就可以进行刷新的状态
-    
-} XZHRefreshState;
+//typedef enum {
+//    XZHRefreshStateDraging = 1, // 拖拽范围超过tableView的contentView（露出header头还没到可以放开刷新的时候，footer一到底开始刷新没有该状态）
+//    XZHRefreshStateNormal,   // 普通状态
+//    XZHRefreshStateRefreshing,//刷新中……
+//    XZHRefreshStateLetOffRefreshing//松开就可以进行刷新的状态
+//    
+//} XZHRefreshState;
 
 
 
@@ -57,14 +58,10 @@ typedef enum {
 
 - (void)setStatusLabelText;
 - (void)beginRefresh;
-//- (void)endRefresh;
+- (void)endRefresh;
 //结束时释放资源
 - (void)free;
-/**
- 交给子类去实现 和 调用
- */
-//- (void)setState:(XZHRefreshState)state;
-//- (int)totalDataCountInScrollView;
+
 
 @end
 

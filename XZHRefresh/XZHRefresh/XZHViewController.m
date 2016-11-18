@@ -7,6 +7,7 @@
 //
 
 #import "XZHViewController.h"
+#import "TestViewController.h"
 #import "XZHRefresh.h"
 
 
@@ -16,7 +17,7 @@ NSString *const TableViewCellIdentifier = @"cell";
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) NSMutableArray *dataSource;
 @property (nonatomic, strong) XZHRefreshHeaderView *header;
-@property (nonatomic, strong) XZHRefreshFooterView *footer;
+@property (nonatomic, strong) XZHRefreshGeneralFooterView *footer;
 @end
 
 @implementation XZHViewController
@@ -53,63 +54,57 @@ NSString *const TableViewCellIdentifier = @"cell";
     [self addHeader];
     
     // 3.2.上拉加载更多
-    //[self addFooter];
+    [self addFooter];
     
 }
 - (void)addFooter
 {
+    self.tableView.refreshFooter = [XZHRefreshGeneralFooterView footerWithRefreshingTarget:self refreshingAction:@selector(refreshLoadMore)];
+
     
-//    __unsafe_unretained XZHViewController *vc = self;
-//    MJRefreshFooterView *footer = [MJRefreshFooterView footer];
-//    footer.scrollView = self.tableView;
-//    footer.beginRefreshingBlock = ^(MJRefreshBaseView *refreshView) {
-//        // 增加5条假数据
-//        for (int i = 0; i<5; i++) {
-//            int random = arc4random_uniform(1000000);
-//            [vc.dataSource addObject:[NSString stringWithFormat:@"随机数据---%d", random]];
-//        }
-//        
-//        // 模拟延迟加载数据，因此2秒后才调用）
-//        // 这里的refreshView其实就是footer
-//        [vc performSelector:@selector(doneWithView:) withObject:refreshView afterDelay:2.0];
 //        
 //        NSLog(@"%@----开始进入刷新状态", refreshView.class);
 //    };
 //    _footer = footer;
 }
+- (void)refreshLoadMore {
+    // 增加5条假数据
 
+    for (int i = 0; i<5; i++) {
+        int random = arc4random_uniform(1000000);
+        [self.dataSource addObject:[NSString stringWithFormat:@"随机数据---%d", random]];
+    }
+  
+    //
+    //        // 模拟延迟加载数据，因此2秒后才调用）
+    //        // 这里的refreshView其实就是footer
+    [self performSelector:@selector(refreshEndAction) withObject:nil afterDelay:2.0];
+}
 - (void)addHeader
 {
     self.tableView.refreshHeader = [XZHRefreshHeaderView headerWithRefreshingTarget:self refreshingAction:@selector(refreshAction)];
-    /*
-    __unsafe_unretained XZHViewController *vc = self;
+    [self.tableView.refreshHeader beginRefresh];
     
-    XZHRefreshHeaderView *header = [XZHRefreshHeaderView header];
-    header.scrollView = self.tableView;
-    header.beginRefreshBlock = ^(XZHRefreshBaseView *refreshView) {
-        // 进入刷新状态就会回调这个Block
-        
-        // 增加5条假数据
-        for (int i = 0; i<5; i++) {
-            int random = arc4random_uniform(1000000);
-            [vc.dataSource insertObject:[NSString stringWithFormat:@"随机数据---%d", random] atIndex:0];
-        }
-        
-        // 模拟延迟加载数据，因此2秒后才调用）
-        // 这里的refreshView其实就是header
-        [vc performSelector:@selector(doneWithView:) withObject:refreshView afterDelay:2.0];
-        
-        NSLog(@"%@----开始进入刷新状态", refreshView.class);
-    };
-    [header beginRefresh];
-    _header = header;
-     */
+    
 }
 
 - (void)refreshAction {
-
+    [self.dataSource removeAllObjects];
+    for (int i = 0; i<10; i++) {
+        int random = arc4random_uniform(1000000);
+        [self.dataSource insertObject:[NSString stringWithFormat:@"随机数据---%d", random] atIndex:0];
+    }
+    
+    // 模拟延迟加载数据，因此2秒后才调用）
+    // 这里的refreshView其实就是header
+    [self performSelector:@selector(refreshEndAction) withObject:nil afterDelay:2.0];
 }
 
+- (void)refreshEndAction {
+    [self.tableView.refreshHeader endRefresh];
+    [self.tableView.refreshFooter endRefreshing];
+    [self.tableView reloadData];
+}
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     return self.dataSource.count;
@@ -123,7 +118,8 @@ NSString *const TableViewCellIdentifier = @"cell";
     return cell;
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    
+    TestViewController *vc = [[TestViewController alloc] init];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 - (void)handleStopRefresh {
     [self.tableView.refreshHeader endRefresh];
