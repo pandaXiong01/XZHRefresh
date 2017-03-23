@@ -43,10 +43,6 @@ NSString *const TableViewCellIdentifier = @"cell";
     
     // 2.初始化假数据
     self.dataSource = [NSMutableArray array];
-    for (int i = 0; i<12; i++) {
-        int random = arc4random_uniform(1000000);
-        [_dataSource addObject:[NSString stringWithFormat:@"随机数据---%d", random]];
-    }
     
     // 3.集成刷新控件
     // 3.1.下拉刷新
@@ -60,6 +56,7 @@ NSString *const TableViewCellIdentifier = @"cell";
 
 - (void)addHeader
 {
+    //第一次刷新时上拉 下拉同时触发
     self.tableView.refreshHeader = [XZHRefreshGeneralHeaderView headerWithRefreshingTarget:self refreshingAction:@selector(refreshAction)];
     [self.tableView.refreshHeader beginRefreshing];
     

@@ -32,15 +32,15 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "No"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XZHRefresh/XZHViewController.m"
-            timestampString = "511948532.091359"
+            timestampString = "511950341.380401"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "79"
-            endingLineNumber = "79"
+            startingLineNumber = "76"
+            endingLineNumber = "76"
             landmarkName = "-refreshLoadMore"
             landmarkType = "7">
          </BreakpointContent>
@@ -75,6 +75,38 @@
             endingLineNumber = "146"
             landmarkName = "-setState:"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[XZHRefreshGeneralHeaderView setState:]"
+                  moduleName = "XZHRefresh"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/gonghui/Desktop/Github/XZHRefresh/XZHRefresh/XZHRefresh/XZHRefresh/XZHRefreshGeneralHeaderView.m"
+                  timestampString = "511950405.774633"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "146"
+                  endingLineNumber = "146"
+                  offsetFromSymbolStart = "1349">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__40-[XZHRefreshGeneralHeaderView setState:]_block_invoke.78"
+                  moduleName = "XZHRefresh"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/gonghui/Desktop/Github/XZHRefresh/XZHRefresh/XZHRefresh/XZHRefresh/XZHRefreshGeneralHeaderView.m"
+                  timestampString = "511950405.776199"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "146"
+                  endingLineNumber = "146"
+                  offsetFromSymbolStart = "37">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -84,27 +116,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XZHRefresh/XZHViewController.m"
-            timestampString = "511948532.091359"
+            timestampString = "511950341.380401"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "105"
-            endingLineNumber = "105"
-            landmarkName = "-tableView:numberOfRowsInSection:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "XZHRefresh/XZHViewController.m"
-            timestampString = "511948532.091359"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "89"
-            endingLineNumber = "89"
+            startingLineNumber = "86"
+            endingLineNumber = "86"
             landmarkName = "-headerRefreshEndAction"
             landmarkType = "7">
          </BreakpointContent>
@@ -112,15 +128,15 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XZHRefresh/XZHViewController.m"
-            timestampString = "511948532.091359"
+            timestampString = "511950341.380401"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "110"
-            endingLineNumber = "110"
+            startingLineNumber = "107"
+            endingLineNumber = "107"
             landmarkName = "-tableView:cellForRowAtIndexPath:"
             landmarkType = "7">
          </BreakpointContent>
@@ -132,11 +148,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XZHRefresh/XZHViewController.m"
-            timestampString = "511948532.091359"
+            timestampString = "511950341.380401"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "100"
-            endingLineNumber = "100"
+            startingLineNumber = "97"
+            endingLineNumber = "97"
             landmarkName = "-footerRefreshEndAction"
             landmarkType = "7">
          </BreakpointContent>
@@ -148,11 +164,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XZHRefresh/XZHViewController.m"
-            timestampString = "511948532.091359"
+            timestampString = "511950341.380401"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "75"
-            endingLineNumber = "75"
+            startingLineNumber = "72"
+            endingLineNumber = "72"
             landmarkName = "-refreshAction"
             landmarkType = "7">
          </BreakpointContent>
