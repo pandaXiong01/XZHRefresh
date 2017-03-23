@@ -8,7 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "XZHRefreshConst.h"
-#import "UIView+Extension.h"
+#import "UIView+XZHExtension.h"
+
 /**
  控件状态
  */
@@ -37,4 +38,5 @@ typedef enum {
 - (void)endRefreshing;
 
 
+//状态是否更改
 @end

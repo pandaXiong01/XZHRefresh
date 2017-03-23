@@ -8,7 +8,8 @@
 
 #import "XZHRefreshHeaderView.h"
 #import "XZHRefreshConst.h"
-#import "UIView+Extension.h"
+#import "UIView+XZHExtension.h"
+#import <objc/message.h>
 
 @interface XZHRefreshHeaderView ()
 
@@ -23,10 +24,7 @@
 
     if (self = [super initWithFrame:frame]) {
         // 初始化文字
-        [self setTitle:XZHRefreshHeaderDragText forState:XZHRefreshStateDraging];
-        [self setTitle:XZHRefreshHeaderLetOffText forState:XZHRefreshStateLetOffRefreshing];
-        [self setTitle:XZHRefreshHeaderRefreshingText forState:XZHRefreshStateRefreshing];
-        [self setStatusLabelText];
+        self.state = XZHRefreshStateDraging;//默认状态
     }
     return self;
 }
@@ -37,8 +35,8 @@
     [super layoutSubviews];
     
     // 设置自己的位置
-    self.y = - self.height;
-    self.statusLabel.frame = self.bounds;
+    self.xzh_y = - self.xzh_height;
+    
     
 }
 
@@ -51,30 +49,36 @@
         [self.scrollView removeObserver:self forKeyPath:XZHRefreshContentOffset context:nil];
         // 监听contentOffset
         [newSuperview addObserver:self forKeyPath:XZHRefreshContentOffset options:NSKeyValueObservingOptionNew context:nil];
-        self.height = XZHRefreshViewHeight;
-        
-        
-        // 设置宽度
-        self.width = newSuperview.width;
-        // 设置位置
-        self.x = 0;
-        // 记录UIScrollView
-        self.scrollView = (UIScrollView *)newSuperview;
-        // 设置永远支持垂直弹簧效果
-        self.scrollView.alwaysBounceVertical = YES;
-        // 记录UIScrollView最开始的contentInset
-        self.scrollViewOriginalInset = self.scrollView.contentInset;
+        [self setupFrameWithNewSuperview:newSuperview];
         
         
     }
 }
 
+- (void)setupFrameWithNewSuperview:(UIView *)newSuperview {
+    self.xzh_height = XZHRefreshViewHeight;
+    
+    // 设置宽度
+    self.xzh_width = newSuperview.xzh_width;
+    // 设置位置
+    self.xzh_x = 0;
+    // 记录UIScrollView
+    self.scrollView = (UIScrollView *)newSuperview;
+    // 设置永远支持垂直弹簧效果
+    self.scrollView.alwaysBounceVertical = YES;
+    // 记录UIScrollView最开始的contentInset
+    self.scrollViewOriginalInset = self.scrollView.contentInset;
+    
+    // 设置位置
+    //self.y = self.scrollView.contentSize.height;
+    NSLog(@"self.y : %lf", self.scrollView.contentSize.height);
+}
 
 
 + (instancetype)headerWithRefreshingTarget:(id)target refreshingAction:(SEL)action {
     XZHRefreshHeaderView *headerView = [[self alloc] init];
-    headerView.beginRefreshingTaget = target;
-    headerView.beginRefreshingAction = action;
+    headerView.refreshingTarget = target;
+    headerView.refreshingAction = action;
     return headerView;
 }
 
@@ -109,7 +113,7 @@
     
     if (self.scrollView.isDragging) {
         // 即将刷新 的临界点
-        CGFloat LetOffsetY = OriginalOffsetY - self.height;
+        CGFloat LetOffsetY = OriginalOffsetY - self.xzh_height;
         
         if (self.state == XZHRefreshStateDraging && currentOffsetY < LetOffsetY) {
             // 转为即将刷新状态
@@ -127,28 +131,82 @@
 
 }
 
-- (void)setTitle:(NSString *)title forState:(XZHRefreshState)state {
+- (void)setState:(XZHRefreshState)state {
+    //这里调整视图控件的状态
+    XZHRefreshState oldState = self.state;
+    if (state == oldState) return;
+    [super setState:state];
+    
+    // 2.根据状态执行不同的操作
     switch (state) {
-        case XZHRefreshStateDraging:
+        case XZHRefreshStateNormal: // 普通状态
         {
-            self.dragText = title;
-        }
-            break;
-        case XZHRefreshStateLetOffRefreshing:
-        {
-            self.letOffText = title;
-        }
-            break;
-        case XZHRefreshStateRefreshing:
-        {
-            self.refreshingText = title;
+            
+            // 说明是刚刷新完毕 回到 普通状态的
+            if (XZHRefreshStateRefreshing == oldState) {
+                //刷新完毕
+                [UIView animateWithDuration:XZHRefreshAnimationDuration animations:^{
+                    
+                    UIEdgeInsets inset = self.scrollView.contentInset;
+                    inset.top -=  self.xzh_height;
+                    self.scrollView.contentInset = inset;
+                    
+                }];
+                
+                
+            } else {
+                
+            }
+            
         }
             break;
             
+        case XZHRefreshStateLetOffRefreshing:
+        {
+            
+        }
+            break;
+            
+        case XZHRefreshStateRefreshing:
+        {
+            if ([self.refreshingTarget respondsToSelector:self.refreshingAction]) {
+                ((void (*)(void *, SEL, UIView *))objc_msgSend)((__bridge void *)(self.refreshingTarget), self.refreshingAction, self);
+                
+            }
+            
+            // 执行动画
+            [UIView animateWithDuration:XZHRefreshAnimationDuration animations:^{
+                // 1.增加滚动区域
+                CGFloat top = self.scrollViewOriginalInset.top + self.xzh_height;
+                UIEdgeInsets inset = self.scrollView.contentInset;
+                inset.top = top;
+                self.scrollView.contentInset = inset;
+                
+                // 2.设置滚动位置
+                //                CGPoint offset = self.scrollView.contentOffset;
+                //                offset.y = - top;
+                //                self.scrollView.contentOffset = offset;
+                
+            }];
+            
+            
+        }
+            
+            break;
+        case XZHRefreshStateDraging:
+        {
+            
+            
+        }
+            break;
         default:
             break;
     }
+    
+
 }
+
+
 
 
 @end

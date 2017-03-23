@@ -7,7 +7,6 @@
 //
 
 #import "XZHViewController.h"
-#import "TestViewController.h"
 #import "XZHRefresh.h"
 
 
@@ -16,7 +15,7 @@ NSString *const TableViewCellIdentifier = @"cell";
 @interface XZHViewController ()<UITableViewDataSource, UITableViewDelegate>
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) NSMutableArray *dataSource;
-@property (nonatomic, strong) XZHRefreshHeaderView *header;
+@property (nonatomic, strong) XZHRefreshGeneralHeaderView *header;
 @property (nonatomic, strong) XZHRefreshGeneralFooterView *footer;
 @end
 
@@ -57,37 +56,19 @@ NSString *const TableViewCellIdentifier = @"cell";
     [self addFooter];
     
 }
+
+
+- (void)addHeader
+{
+    self.tableView.refreshHeader = [XZHRefreshGeneralHeaderView headerWithRefreshingTarget:self refreshingAction:@selector(refreshAction)];
+    [self.tableView.refreshHeader beginRefreshing];
+    
+    
+}
 - (void)addFooter
 {
     self.tableView.refreshFooter = [XZHRefreshGeneralFooterView footerWithRefreshingTarget:self refreshingAction:@selector(refreshLoadMore)];
-
-    
-//        
-//        NSLog(@"%@----开始进入刷新状态", refreshView.class);
-//    };
-//    _footer = footer;
 }
-- (void)refreshLoadMore {
-    // 增加5条假数据
-
-    for (int i = 0; i<5; i++) {
-        int random = arc4random_uniform(1000000);
-        [self.dataSource addObject:[NSString stringWithFormat:@"随机数据---%d", random]];
-    }
-  
-    //
-    //        // 模拟延迟加载数据，因此2秒后才调用）
-    //        // 这里的refreshView其实就是footer
-    [self performSelector:@selector(refreshEndAction) withObject:nil afterDelay:2.0];
-}
-- (void)addHeader
-{
-    self.tableView.refreshHeader = [XZHRefreshHeaderView headerWithRefreshingTarget:self refreshingAction:@selector(refreshAction)];
-    [self.tableView.refreshHeader beginRefresh];
-    
-    
-}
-
 - (void)refreshAction {
     [self.dataSource removeAllObjects];
     for (int i = 0; i<10; i++) {
@@ -96,12 +77,24 @@ NSString *const TableViewCellIdentifier = @"cell";
     }
     
     // 模拟延迟加载数据，因此2秒后才调用）
-    // 这里的refreshView其实就是header
-    [self performSelector:@selector(refreshEndAction) withObject:nil afterDelay:2.0];
+    [self performSelector:@selector(headerRefreshEndAction) withObject:nil afterDelay:2.0];
 }
-
-- (void)refreshEndAction {
-    [self.tableView.refreshHeader endRefresh];
+- (void)refreshLoadMore {
+    // 增加5条假数据
+    
+    for (int i = 0; i<5; i++) {
+        int random = arc4random_uniform(1000000);
+        [self.dataSource addObject:[NSString stringWithFormat:@"随机数据---%d", random]];
+    }
+    
+    //模拟延迟加载数据，因此2秒后才调用）
+    [self performSelector:@selector(footerRefreshEndAction) withObject:nil afterDelay:2.0];
+}
+- (void)headerRefreshEndAction {
+    [self.tableView.refreshHeader endRefreshing];
+    [self.tableView reloadData];
+}
+- (void)footerRefreshEndAction {
     [self.tableView.refreshFooter endRefreshing];
     [self.tableView reloadData];
 }
@@ -113,16 +106,16 @@ NSString *const TableViewCellIdentifier = @"cell";
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:TableViewCellIdentifier forIndexPath:indexPath];
-    
+    /*上拉加载后 下拉刷新 --  数据越界崩溃
+     */
     cell.textLabel.text = self.dataSource[indexPath.row];
     return cell;
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    TestViewController *vc = [[TestViewController alloc] init];
-    [self.navigationController pushViewController:vc animated:YES];
+   
 }
 - (void)handleStopRefresh {
-    [self.tableView.refreshHeader endRefresh];
+    [self.tableView.refreshHeader endRefreshing];
 
 }
 - (void)didReceiveMemoryWarning {

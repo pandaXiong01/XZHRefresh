@@ -10,7 +10,8 @@
 #define XZHRefresh_h
 #import "UIScrollView+XZHRefresh.h"
 #import "XZHRefreshHeaderView.h"
-#import "XZHRefreshFooterView.h"
+//#import "XZHRefreshFooterView.h"
+#import "XZHRefreshGeneralHeaderView.h"
 #import "XZHRefreshGeneralFooterView.h"
 
 #endif /* XZHRefresh_h */

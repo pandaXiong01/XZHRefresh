@@ -36,8 +36,11 @@ static const void *XZHRefreshFooterKey = &XZHRefreshFooterKey;
     return objc_getAssociatedObject(self, &XZHRefreshFooterKey);
 }
 
-- (NSInteger)totalDataCount
-{
+
+
+
+- (NSInteger)allDataCount {
+    
     NSInteger totalCount = 0;
     if ([self isKindOfClass:[UITableView class]]) {
         UITableView *tableView = (UITableView *)self;

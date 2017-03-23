@@ -14,4 +14,5 @@
 /** 上拉刷新控件 */
 @property (strong, nonatomic) XZHRefreshFooterView *refreshFooter;
 
+- (NSInteger)allDataCount;//所有数据个数
 @end

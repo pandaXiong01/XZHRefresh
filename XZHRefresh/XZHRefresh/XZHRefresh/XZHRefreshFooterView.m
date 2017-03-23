@@ -44,8 +44,8 @@
 - (void)layoutSubviews {
     [super layoutSubviews];
     // 设置位置
-    self.y = self.scrollView.contentSize.height;
-    NSLog(@"self.y : %lf", self.scrollView.contentSize.height);
+    self.xzh_y = self.scrollView.contentSize.height;
+    
 }
 
 - (void)willMoveToSuperview:(UIView *)newSuperview {
@@ -59,31 +59,34 @@
         [newSuperview addObserver:self forKeyPath:XZHRefreshContentSize options:NSKeyValueObservingOptionNew context:nil];
         [newSuperview addObserver:self forKeyPath:XZHRefreshPanState options:NSKeyValueObservingOptionNew context:nil];
         
-        self.height = XZHRefreshViewHeight;
-        UIEdgeInsets inset = self.scrollView.contentInset;
-        //在contentview下面加个尾巴，相当于增加了contentview的高度
-        inset.bottom += self.height;
-        self.scrollView.contentInset = inset;
-        
-        // 设置位置
-        //self.y = self.scrollView.contentSize.height;
-        NSLog(@"self.y : %lf", self.scrollView.contentSize.height);
+        [self setupFrame];
     }
 
     
 }
 
+- (void)setupFrame {
+    self.xzh_height = XZHRefreshViewHeight;
+    UIEdgeInsets inset = self.scrollView.contentInset;
+    //在contentview下面加个尾巴，相当于增加了contentview的高度
+    inset.bottom += self.xzh_height;
+    self.scrollView.contentInset = inset;
+    
+    // 设置位置
+    //self.y = self.scrollView.contentSize.height;
+    NSLog(@"self.y : %lf", self.scrollView.contentSize.height);
+}
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
     // 不能跟用户交互，直接返回
     if (!self.userInteractionEnabled || self.alpha <= 0.01 || self.hidden || self.state == XZHRefreshStateNoMoreData) {
-        //TODO self.state == MJRefreshFooterStateNoMoreData
+        
         return;
     }
     
     if ([XZHRefreshPanState isEqualToString:keyPath]){
         if (self.scrollView.panGestureRecognizer.state == UIGestureRecognizerStateEnded) {
-            if (self.scrollView.contentInset.top+self.scrollView.contentInset.bottom+self.scrollView.contentSize.height <= self.scrollView.height) {
+            if (self.scrollView.contentInset.top+self.scrollView.contentInset.bottom+self.scrollView.contentSize.height <= self.scrollView.xzh_height) {
                 //滚动区域小于scrollView的区域 向上滑动就刷新
                 if (self.scrollView.contentOffset.y > -self.scrollView.contentInset.top) {
                     //向上拽
@@ -99,7 +102,7 @@
     
     } else if ([XZHRefreshContentSize isEqualToString:keyPath]) {
         // 调整frame
-        self.y = self.scrollView.contentSize.height;
+        self.xzh_y = self.scrollView.contentSize.height;
     } else if ([XZHRefreshContentOffset isEqualToString:keyPath]) {
         // 如果正在刷新，直接返回
         if (self.state ==  XZHRefreshStateRefreshing) return;
@@ -126,7 +129,7 @@
     XZHRefreshState oldState = self.state;
     if (state == oldState) return;
     [super setState:state];
-    
+    //TODO :下拉刷新触发这个方法，需要检查一下。（长度低于整个屏幕）
     switch (state) {
         case XZHRefreshStateRefreshing:
         {

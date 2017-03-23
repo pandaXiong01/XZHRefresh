@@ -41,7 +41,8 @@
         UILabel *noMoreLabel = [[UILabel alloc] init];
         noMoreLabel.backgroundColor = [UIColor clearColor];
         noMoreLabel.textAlignment = NSTextAlignmentCenter;
-        noMoreLabel.adjustsFontSizeToFitWidth = YES;  
+        noMoreLabel.font = [UIFont boldSystemFontOfSize:StatusLabelSize];
+        noMoreLabel.textColor = [UIColor lightGrayColor];
         [self addSubview:_noMoreLabel = noMoreLabel];
     }
     return _noMoreLabel;
@@ -80,7 +81,7 @@
     _stateLabel.hidden = YES;
     _stateLabel.text = _footerRefreshingText;
     self.activityView.frame = CGRectMake(0, 0, 30, 30);
-    _activityView.center = CGPointMake(self.width * 0.3, self.height *0.5);
+    _activityView.center = CGPointMake(self.xzh_width * 0.3, self.xzh_height *0.5);
     
 }
 - (void)setState:(XZHRefreshState)state {
@@ -118,10 +119,10 @@
             break;
     }
 
-    
+    [self setStateLabelText];
     
 }
-- (void)setStatusLabelText {
+- (void)setStateLabelText {
     switch (self.state) {
         case XZHRefreshStateNormal:
             _noMoreLabel.text = _footerNoMoreDataText;

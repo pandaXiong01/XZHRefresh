@@ -8,7 +8,7 @@
 
 #import "XZHRefreshBaseView.h"
 #import "XZHRefreshConst.h"
-#import "UIView+Extension.h"
+#import "UIView+XZHExtension.h"
 #import <objc/message.h>
 @interface XZHRefreshBaseView ()
 
@@ -40,22 +40,10 @@ static const CGFloat animateDuration  =  0.3;
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
-        //?????
+
         self.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         self.backgroundColor = [UIColor clearColor];
         _state = XZHRefreshStateDraging;//默认状态
-        //label
-        _statusLabel = [self labelWithFontSize:StatusLabelSize];
-        [self addSubview:_statusLabel];
-        //方向箭头
-        _directionImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"arrow"]];
-        _directionImage.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
-        [self addSubview:_directionImage];
-        //指示器
-        _activityView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-        _activityView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
-        
-        [self addSubview:_activityView];
         
     }
     return self;
@@ -63,55 +51,8 @@ static const CGFloat animateDuration  =  0.3;
 
 
 
-- (void)setFrame:(CGRect)frame {
-    frame.size.height = XZHRefreshViewHeight;
-    [super setFrame:frame];
-    
-    CGFloat w = frame.size.width;
-    CGFloat h = frame.size.height;
-    if (w == 0) {
-        return;
-    }
-    CGFloat statusX = 0;
-    CGFloat statusY = 5;
-    CGFloat statusHeight = 20;
-    CGFloat statusWidth = w;
-    // 1.状态标签
-    _statusLabel.frame = CGRectMake(statusX, statusY, statusWidth, statusHeight);
-    
-    // 2.箭头
-    CGFloat arrowX = w * 0.35;
-    _directionImage.center = CGPointMake(arrowX, h * 0.5);
-    
-    // 3.指示器
-    _activityView.bounds = _directionImage.bounds;
-    _activityView.center = _directionImage.center;
-    
-    
-}
-
-- (void)setBounds:(CGRect)bounds {
-    bounds.size.height = XZHRefreshViewHeight;
-    [super setBounds:bounds];
-}
 
 
-- (void)setStatusLabelText {
-    switch (_state) {
-        case XZHRefreshStateDraging:
-            _statusLabel.text = _dragText;
-            break;
-        case XZHRefreshStateLetOffRefreshing:
-            _statusLabel.text = _letOffText;
-            break;
-        case XZHRefreshStateRefreshing:
-            _statusLabel.text = _refreshingText;
-            break;
-            
-        default:
-            break;
-    }
-}
 
 #pragma mark 设置状态
 
@@ -137,7 +78,7 @@ static const CGFloat animateDuration  =  0.3;
                 [UIView animateWithDuration:animateDuration animations:^{
                     
                     UIEdgeInsets inset = self.scrollView.contentInset;
-                    inset.top -=  self.height;
+                    inset.top -=  self.xzh_height;
                     self.scrollView.contentInset = inset;
                     
                 }];
@@ -172,11 +113,11 @@ static const CGFloat animateDuration  =  0.3;
             // 执行动画
             [UIView animateWithDuration:animateDuration animations:^{
                 // 1.增加滚动区域
-                CGFloat top = self.scrollViewOriginalInset.top + self.height;
+                CGFloat top = self.scrollViewOriginalInset.top + self.xzh_height;
                 UIEdgeInsets inset = self.scrollView.contentInset;
                 inset.top = top;
                 self.scrollView.contentInset = inset;
-                
+            
                 // 2.设置滚动位置
                 //                CGPoint offset = self.scrollView.contentOffset;
                 //                offset.y = - top;
@@ -228,7 +169,10 @@ static const CGFloat animateDuration  =  0.3;
     
 }
 - (void)endRefresh {
-    self.state = XZHRefreshStateNormal;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        self.state = XZHRefreshStateNormal;
+    });
+    
 }
 
 //结束时释放资源
