@@ -10,7 +10,6 @@
 		AA01C80E1DC0877C009CA105 /* UIScrollView+XZHRefresh.m in Sources */ = {isa = PBXBuildFile; fileRef = AA01C80D1DC0877C009CA105 /* UIScrollView+XZHRefresh.m */; };
 		AA0778241DC7408100DAE343 /* XZHRefreshGeneralFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = AA0778231DC7408100DAE343 /* XZHRefreshGeneralFooterView.m */; };
 		AA0EDB771D0124FF004EEA34 /* XZHViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA0EDB761D0124FF004EEA34 /* XZHViewController.m */; };
-		AA0EDB881D012663004EEA34 /* XZHRefreshBaseView.m in Sources */ = {isa = PBXBuildFile; fileRef = AA0EDB871D012663004EEA34 /* XZHRefreshBaseView.m */; };
 		AA0EDB8B1D012684004EEA34 /* XZHRefreshFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = AA0EDB8A1D012684004EEA34 /* XZHRefreshFooterView.m */; };
 		AA0EDB8E1D01269C004EEA34 /* XZHRefreshHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = AA0EDB8D1D01269C004EEA34 /* XZHRefreshHeaderView.m */; };
 		AA0EDB951D012E77004EEA34 /* XZHRefreshConst.m in Sources */ = {isa = PBXBuildFile; fileRef = AA0EDB941D012E77004EEA34 /* XZHRefreshConst.m */; };
@@ -33,8 +32,6 @@
 		AA0778231DC7408100DAE343 /* XZHRefreshGeneralFooterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XZHRefreshGeneralFooterView.m; sourceTree = "<group>"; };
 		AA0EDB751D0124FF004EEA34 /* XZHViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XZHViewController.h; sourceTree = "<group>"; };
 		AA0EDB761D0124FF004EEA34 /* XZHViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XZHViewController.m; sourceTree = "<group>"; };
-		AA0EDB861D012663004EEA34 /* XZHRefreshBaseView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XZHRefreshBaseView.h; sourceTree = "<group>"; };
-		AA0EDB871D012663004EEA34 /* XZHRefreshBaseView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XZHRefreshBaseView.m; sourceTree = "<group>"; };
 		AA0EDB891D012684004EEA34 /* XZHRefreshFooterView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XZHRefreshFooterView.h; sourceTree = "<group>"; };
 		AA0EDB8A1D012684004EEA34 /* XZHRefreshFooterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XZHRefreshFooterView.m; sourceTree = "<group>"; };
 		AA0EDB8C1D01269C004EEA34 /* XZHRefreshHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XZHRefreshHeaderView.h; sourceTree = "<group>"; };
@@ -75,8 +72,6 @@
 		AA0EDB851D012617004EEA34 /* XZHRefresh */ = {
 			isa = PBXGroup;
 			children = (
-				AA0EDB861D012663004EEA34 /* XZHRefreshBaseView.h */,
-				AA0EDB871D012663004EEA34 /* XZHRefreshBaseView.m */,
 				AA3C78BC1D0560C90025C382 /* XZHRefreshView.h */,
 				AA3C78BD1D0560C90025C382 /* XZHRefreshView.m */,
 				AA0EDB891D012684004EEA34 /* XZHRefreshFooterView.h */,
@@ -218,7 +213,6 @@
 				AA5D81821DF15682006B45AF /* XZHRefreshGeneralHeaderView.m in Sources */,
 				FEBCA0FE1D00634A003BDFDD /* AppDelegate.m in Sources */,
 				AA0EDB8B1D012684004EEA34 /* XZHRefreshFooterView.m in Sources */,
-				AA0EDB881D012663004EEA34 /* XZHRefreshBaseView.m in Sources */,
 				AA0EDB951D012E77004EEA34 /* XZHRefreshConst.m in Sources */,
 				AA3C78BE1D0560C90025C382 /* XZHRefreshView.m in Sources */,
 				AA569D221DBE2BD200F5D29A /* UIScrollView+Refresh.m in Sources */,

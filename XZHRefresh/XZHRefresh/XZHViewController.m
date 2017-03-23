@@ -70,16 +70,26 @@ NSString *const TableViewCellIdentifier = @"cell";
     self.tableView.refreshFooter = [XZHRefreshGeneralFooterView footerWithRefreshingTarget:self refreshingAction:@selector(refreshLoadMore)];
 }
 - (void)refreshAction {
-    [self.dataSource removeAllObjects];
-    for (int i = 0; i<10; i++) {
-        int random = arc4random_uniform(1000000);
-        [self.dataSource insertObject:[NSString stringWithFormat:@"随机数据---%d", random] atIndex:0];
-    }
+    
     
     // 模拟延迟加载数据，因此2秒后才调用）
     [self performSelector:@selector(headerRefreshEndAction) withObject:nil afterDelay:2.0];
 }
 - (void)refreshLoadMore {
+    
+    //模拟延迟加载数据，因此2秒后才调用）
+    [self performSelector:@selector(footerRefreshEndAction) withObject:nil afterDelay:2.0];
+}
+- (void)headerRefreshEndAction {
+    [self.dataSource removeAllObjects];
+    for (int i = 0; i<10; i++) {
+        int random = arc4random_uniform(1000000);
+        [self.dataSource insertObject:[NSString stringWithFormat:@"随机数据---%d", random] atIndex:0];
+    }
+    [self.tableView.refreshHeader endRefreshing];
+    [self.tableView reloadData];
+}
+- (void)footerRefreshEndAction {
     // 增加5条假数据
     
     for (int i = 0; i<5; i++) {
@@ -87,14 +97,6 @@ NSString *const TableViewCellIdentifier = @"cell";
         [self.dataSource addObject:[NSString stringWithFormat:@"随机数据---%d", random]];
     }
     
-    //模拟延迟加载数据，因此2秒后才调用）
-    [self performSelector:@selector(footerRefreshEndAction) withObject:nil afterDelay:2.0];
-}
-- (void)headerRefreshEndAction {
-    [self.tableView.refreshHeader endRefreshing];
-    [self.tableView reloadData];
-}
-- (void)footerRefreshEndAction {
     [self.tableView.refreshFooter endRefreshing];
     [self.tableView reloadData];
 }
